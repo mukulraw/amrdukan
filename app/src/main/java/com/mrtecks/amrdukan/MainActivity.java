@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
                     case R.id.action_blog:
-                        /*FragmentManager fm2 = getSupportFragmentManager();
+                        FragmentManager fm2 = getSupportFragmentManager();
 
                         for (int i = 0; i < fm2.getBackStackEntryCount(); ++i) {
                             fm2.popBackStack();
@@ -113,14 +113,14 @@ public class MainActivity extends AppCompatActivity {
 
                         FragmentTransaction ft2 = fm2.beginTransaction();
                         ft2.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        blog frag12 = new blog();
+                        Search frag12 = new Search();
                         ft2.replace(R.id.replace, frag12);
                         //ft.addToBackStack(null);
                         ft2.commit();
-                        drawer.closeDrawer(GravityCompat.START);*/
+                        drawer.closeDrawer(GravityCompat.START);
                         break;
                     case R.id.action_cart:
-                        /*FragmentManager fm3 = getSupportFragmentManager();
+                        FragmentManager fm3 = getSupportFragmentManager();
 
                         for (int i = 0; i < fm3.getBackStackEntryCount(); ++i) {
                             fm3.popBackStack();
@@ -132,10 +132,10 @@ public class MainActivity extends AppCompatActivity {
                         ft3.replace(R.id.replace, frag13);
                         //ft.addToBackStack(null);
                         ft3.commit();
-                        drawer.closeDrawer(GravityCompat.START);*/
+                        drawer.closeDrawer(GravityCompat.START);
                         break;
                     case R.id.action_orders:
-                       /* FragmentManager fm31 = getSupportFragmentManager();
+                        FragmentManager fm31 = getSupportFragmentManager();
 
                         for (int i = 0; i < fm31.getBackStackEntryCount(); ++i) {
                             fm31.popBackStack();
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                         ft31.replace(R.id.replace, frag131);
                         //ft.addToBackStack(null);
                         ft31.commit();
-                        drawer.closeDrawer(GravityCompat.START);*/
+                        drawer.closeDrawer(GravityCompat.START);
                         break;
                 }
                 return true;

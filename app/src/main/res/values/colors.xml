@@ -6,4 +6,6 @@
     <color name="shade">#f5f5f5</color>
     <color name="shade2">#FAECE6</color>
     <color name="white">#ffffff</color>
+    <color name="red">#b71c1c</color>
+    <color name="black">#000000</color>
 </resources>

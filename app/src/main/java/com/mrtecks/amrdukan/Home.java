@@ -31,12 +31,8 @@ public class Home extends Fragment {
 
     RecyclerView categories;
     RecyclerView best;
-    RecyclerView features;
-    RecyclerView blog;
     GridLayoutManager manager;
     LinearLayoutManager manager2;
-    LinearLayoutManager manager3;
-    LinearLayoutManager manager4;
     ViewPager banners;
     CircleIndicator indicator;
 
@@ -47,20 +43,14 @@ public class Home extends Fragment {
     final int duration = 10;
     final int pixelsToMove = 30;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
-    private final Runnable SCROLLING_RUNNABLE = new Runnable() {
 
-        @Override
-        public void run() {
-            blog.smoothScrollBy(pixelsToMove, 0);
-            mHandler.postDelayed(this, duration);
-        }
-    };
 
     static MainActivity mainActivity;
 
     EditText search;
 
     CategoryAdapter categoryAdapter;
+    BestAdapter bestAdapter;
 
 
     @Nullable
@@ -72,6 +62,7 @@ public class Home extends Fragment {
         banners = view.findViewById(R.id.viewPager);
         indicator = view.findViewById(R.id.indicator);
         categories = view.findViewById(R.id.recyclerView);
+        best = view.findViewById(R.id.recyclerView2);
 
 
         final PagerAdapter adapter = new PagerAdapter(getChildFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -79,7 +70,9 @@ public class Home extends Fragment {
         banners.setAdapter(adapter);
         indicator.setViewPager(banners);
         categoryAdapter = new CategoryAdapter(mainActivity);
+        bestAdapter = new BestAdapter(mainActivity);
         manager = new GridLayoutManager(mainActivity, 3);
+        manager2 = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
 
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -90,6 +83,9 @@ public class Home extends Fragment {
 
         categories.setAdapter(categoryAdapter);
         categories.setLayoutManager(manager);
+
+        best.setAdapter(bestAdapter);
+        best.setLayoutManager(manager2);
 
         /*search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,6 +248,62 @@ public class Home extends Fragment {
                 super(itemView);
                 image = itemView.findViewById(R.id.image);
                 title = itemView.findViewById(R.id.textView7);
+            }
+        }
+    }
+
+    class BestAdapter extends RecyclerView.Adapter<BestAdapter.ViewHolder> {
+        Context context;
+
+        public BestAdapter(Context context) {
+            this.context = context;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.best_list_model, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    /*FragmentManager fm4 = mainActivity.getSupportFragmentManager();
+
+                    FragmentTransaction ft4 = fm4.beginTransaction();
+                    SubCat frag14 = new SubCat();
+                    ft4.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    *//*Bundle b = new Bundle();
+                    b.putString("id", item.getId());
+                    b.putString("title", item.getName());
+                    frag14.setArguments(b);*//*
+                    ft4.replace(R.id.replace, frag14);
+                    ft4.addToBackStack(null);
+                    ft4.commit();*/
+
+                }
+            });
+
+
+        }
+
+
+        @Override
+        public int getItemCount() {
+            return 8;
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
             }
         }
     }

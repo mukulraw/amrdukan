@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="HOME"
+        app:showAsAction="always"
+        android:icon="@drawable/logo2"
+        android:id="@+id/action_home"
+        android:enabled="true"
+        />
+
+    <item
+        android:title="CONTACT US"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_technical_support"
+        android:id="@+id/action_search"
+        android:enabled="true"
+        />
+
+    <item
+        android:title="SEARCH"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_search"
+        android:id="@+id/action_blog"
+        android:enabled="true"
+        />
+
+    <item
+        android:title="CART"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_shopping_cart"
+        android:id="@+id/action_cart"
+        android:enabled="true"
+        />
+
+    <item
+        android:title="ORDERS"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_order"
+        android:id="@+id/action_orders"
+        android:enabled="true"
+        />
+
+</menu>

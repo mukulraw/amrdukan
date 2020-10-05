@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
+    android:background="@color/shade"
     android:layout_height="match_parent">
 
     <TextView
@@ -79,6 +80,7 @@
             <me.relex.circleindicator.CircleIndicator
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                android:id="@+id/indicator"
                 app:layout_constraintBottom_toBottomOf="@+id/viewPager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -112,6 +114,9 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:clipToPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView10" />
@@ -120,6 +125,7 @@
                 android:id="@+id/imageView3"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="8dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintDimensionRatio="3:1"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -151,6 +157,7 @@
                 android:id="@+id/imageView4"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="8dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintDimensionRatio="3:1"
                 app:layout_constraintEnd_toEndOf="parent"

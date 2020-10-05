@@ -1,5 +1,6 @@
 package com.mrtecks.amrdukan;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,10 +13,15 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+
+import me.relex.circleindicator.CircleIndicator;
 
 public class Home extends Fragment {
 
@@ -27,7 +33,8 @@ public class Home extends Fragment {
     LinearLayoutManager manager2;
     LinearLayoutManager manager3;
     LinearLayoutManager manager4;
-    ViewPager features2;
+    ViewPager banners;
+    CircleIndicator indicator;
 
     ImageView left, right;
     boolean programaticallyScrolled;
@@ -49,16 +56,28 @@ public class Home extends Fragment {
 
     EditText search;
 
+    CategoryAdapter categoryAdapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home, container, false);
         mainActivity = (MainActivity) getActivity();
 
+        banners = view.findViewById(R.id.viewPager);
+        indicator = view.findViewById(R.id.indicator);
+        categories = view.findViewById(R.id.recyclerView);
 
 
 
+        PagerAdapter adapter = new PagerAdapter(getChildFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
+        banners.setAdapter(adapter);
+        indicator.setViewPager(banners);
+        categoryAdapter = new CategoryAdapter(mainActivity);
+        manager = new GridLayoutManager(mainActivity, 3);
+        categories.setAdapter(categoryAdapter);
+        categories.setLayoutManager(manager);
 
         /*search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,147 +104,7 @@ public class Home extends Fragment {
     }
 
 
-
-
-    /*class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
-        Context context;
-
-        public CategoryAdapter(Context context) {
-            this.context = context;
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.category_list_model, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    FragmentManager fm4 = mainActivity.getSupportFragmentManager();
-
-                    FragmentTransaction ft4 = fm4.beginTransaction();
-                    SubCat frag14 = new SubCat();
-                    ft4.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    *//*Bundle b = new Bundle();
-                    b.putString("id", item.getId());
-                    b.putString("title", item.getName());
-                    frag14.setArguments(b);*//*
-                    ft4.replace(R.id.replace, frag14);
-                    ft4.addToBackStack(null);
-                    ft4.commit();
-
-                }
-            });
-
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return 6;
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-            }
-        }
-    }
-
-    class BestAdapter extends RecyclerView.Adapter<BestAdapter.ViewHolder> {
-        Context context;
-        int[] imgs = new int[]
-                {
-                        R.drawable.mango,
-                        R.drawable.orange,
-                        R.drawable.banana,
-                        R.drawable.apple,
-                        R.drawable.kiwi,
-                        R.drawable.guava
-                };
-
-        String[] titles = new String[]
-                {
-                        "Mango",
-                        "Orange",
-                        "Banana",
-                        "Apple",
-                        "Kiwi",
-                        "Guava"
-                };
-
-        public BestAdapter(Context context) {
-            this.context = context;
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.best_list_model, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-            holder.setIsRecyclable(false);
-
-            holder.image.setImageDrawable(context.getDrawable(imgs[position]));
-
-            holder.title.setText(titles[position]);
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    FragmentManager fm4 = mainActivity.getSupportFragmentManager();
-
-                    FragmentTransaction ft4 = fm4.beginTransaction();
-                    singleProduct frag14 = new singleProduct();
-                    ft4.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    *//*Bundle b = new Bundle();
-                    b.putString("id", item.getId());
-                    b.putString("title", item.getName());
-                    frag14.setArguments(b);*//*
-                    ft4.replace(R.id.replace, frag14);
-                    ft4.addToBackStack(null);
-                    ft4.commit();
-
-                }
-            });
-
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return 6;
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-
-            ImageView image;
-            TextView title;
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-                image = itemView.findViewById(R.id.imageView6);
-                title = itemView.findViewById(R.id.textView10);
-            }
-        }
-    }*/
-
-    /*class PagerAdapter extends FragmentStatePagerAdapter {
+    class PagerAdapter extends FragmentStatePagerAdapter {
 
         int[] banners = new int[]{
                 R.drawable.banner01,
@@ -273,39 +152,11 @@ public class Home extends Fragment {
         }
     }
 
-    class PagerAdapter2 extends FragmentStatePagerAdapter {
 
-
-        public PagerAdapter2(@NonNull FragmentManager fm, int behavior) {
-            super(fm, behavior);
-        }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return new page2();
-        }
-
-        @Override
-        public int getCount() {
-            return 4;
-        }
-    }
-
-    public static class page2 extends Fragment {
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.page2, container, false);
-
-            return view;
-        }
-    }
-
-    class FeaturesAdapter extends RecyclerView.Adapter<FeaturesAdapter.ViewHolder> {
+    class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
         Context context;
 
-        public FeaturesAdapter(Context context) {
+        public CategoryAdapter(Context context) {
             this.context = context;
         }
 
@@ -313,78 +164,47 @@ public class Home extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.feature_list_model, parent, false);
+            View view = inflater.inflate(R.layout.category_list_model, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-        @Override
-        public int getItemCount() {
-            return 4;
-        }
+                    /*FragmentManager fm4 = mainActivity.getSupportFragmentManager();
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+                    FragmentTransaction ft4 = fm4.beginTransaction();
+                    SubCat frag14 = new SubCat();
+                    ft4.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    *//*Bundle b = new Bundle();
+                    b.putString("id", item.getId());
+                    b.putString("title", item.getName());
+                    frag14.setArguments(b);*//*
+                    ft4.replace(R.id.replace, frag14);
+                    ft4.addToBackStack(null);
+                    ft4.commit();*/
 
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-            }
-        }
-    }
-
-    class BLOGAdapter extends RecyclerView.Adapter<BLOGAdapter.ViewHolder> {
-        Context context;
-
-        public BLOGAdapter(Context context) {
-            this.context = context;
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.blog_list_model, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return 4;
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-            }
-        }
-    }
-
-    public void autoScroll() {
-        final int speedScroll = 10;
-        final Handler handler = new Handler();
-        final Runnable runnable = new Runnable() {
-            int count = 0;
-
-            @Override
-            public void run() {
-                if (count == blogAdapter.getItemCount())
-                    count = 0;
-                if (count < blogAdapter.getItemCount()) {
-                    blog.smoothScrollToPosition(++count);
-                    handler.postDelayed(this, speedScroll);
                 }
+            });
+
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 3;
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
             }
-        };
-        handler.postDelayed(runnable, speedScroll);
-    }*/
+        }
+    }
 
 }

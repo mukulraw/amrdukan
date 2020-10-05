@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator;
 
@@ -58,6 +62,7 @@ public class Home extends Fragment {
 
     CategoryAdapter categoryAdapter;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,13 +74,20 @@ public class Home extends Fragment {
         categories = view.findViewById(R.id.recyclerView);
 
 
-
-        PagerAdapter adapter = new PagerAdapter(getChildFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        final PagerAdapter adapter = new PagerAdapter(getChildFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
         banners.setAdapter(adapter);
         indicator.setViewPager(banners);
         categoryAdapter = new CategoryAdapter(mainActivity);
         manager = new GridLayoutManager(mainActivity, 3);
+
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return categoryAdapter.getSpans(position);
+            }
+        });
+
         categories.setAdapter(categoryAdapter);
         categories.setLayoutManager(manager);
 
@@ -107,9 +119,10 @@ public class Home extends Fragment {
     class PagerAdapter extends FragmentStatePagerAdapter {
 
         int[] banners = new int[]{
-                R.drawable.banner01,
-                R.drawable.banner02,
-                R.drawable.banner03
+                R.drawable.banner1,
+                R.drawable.banner2,
+                R.drawable.banner3,
+                R.drawable.banner4
         };
 
         public PagerAdapter(@NonNull FragmentManager fm, int behavior) {
@@ -156,6 +169,30 @@ public class Home extends Fragment {
     class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
         Context context;
 
+        String[] title = new String[]{
+                "Grocery",
+                "Foodkart",
+                "Electronics",
+                "Exclusive Fashion Store"
+        };
+
+        int[] images = new int[]
+                {
+                        R.drawable.grocery,
+                        R.drawable.foodkart,
+                        R.drawable.electronics,
+                        R.drawable.fashion
+                };
+
+        int[] spans = new int[]
+                {
+                        1,
+                        1,
+                        1,
+                        3
+                };
+
+
         public CategoryAdapter(Context context) {
             this.context = context;
         }
@@ -170,6 +207,9 @@ public class Home extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+            holder.image.setImageDrawable(context.getResources().getDrawable(images[position]));
+            holder.title.setText(title[position]);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -194,15 +234,24 @@ public class Home extends Fragment {
 
         }
 
+        public int getSpans(int pos) {
+            return spans[pos];
+        }
+
         @Override
         public int getItemCount() {
-            return 3;
+            return title.length;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
 
+            ImageView image;
+            TextView title;
+
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
+                image = itemView.findViewById(R.id.image);
+                title = itemView.findViewById(R.id.textView7);
             }
         }
     }

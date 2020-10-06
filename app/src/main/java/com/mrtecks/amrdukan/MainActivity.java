@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.action_search:
 
-/*
+
 
                         FragmentManager fm1 = getSupportFragmentManager();
 
@@ -89,15 +89,13 @@ public class MainActivity extends AppCompatActivity {
 
                         FragmentTransaction ft1 = fm1.beginTransaction();
                         ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        Home frag11 = new Home();
+                        Contact frag11 = new Contact();
                         ft1.replace(R.id.replace, frag11);
                         //ft.addToBackStack(null);
                         ft1.commit();
                         drawer.closeDrawer(GravityCompat.START);
-*/
 
-                        Intent intent = new Intent("search");
-                        intent.putExtra("key", "My Data");
+
                         // put your all data using put extra
 
                         //LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);

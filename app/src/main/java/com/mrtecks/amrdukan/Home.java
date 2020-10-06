@@ -1,6 +1,7 @@
 package com.mrtecks.amrdukan;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -155,7 +156,7 @@ public class Home extends Fragment {
 
             image = view.findViewById(R.id.image);
 
-            image.setImageDrawable(getActivity().getDrawable(banner));
+            image.setImageDrawable(getActivity().getResources().getDrawable(banner));
 
             return view;
         }
@@ -202,7 +203,7 @@ public class Home extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
             holder.image.setImageDrawable(context.getResources().getDrawable(images[position]));
             holder.title.setText(title[position]);
@@ -210,6 +211,10 @@ public class Home extends Fragment {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    Intent intent = new Intent(context, Category.class);
+                    intent.putExtra("title", title[position]);
+                    context.startActivity(intent);
 
                     /*FragmentManager fm4 = mainActivity.getSupportFragmentManager();
 

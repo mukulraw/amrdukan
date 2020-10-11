@@ -170,6 +170,7 @@ public class Home extends Fragment {
                 "Grocery",
                 "Foodkart",
                 "Electronics",
+                "Medicines",
                 "Exclusive Fashion Store"
         };
 
@@ -178,6 +179,7 @@ public class Home extends Fragment {
                         R.drawable.grocery,
                         R.drawable.foodkart,
                         R.drawable.electronics,
+                        R.drawable.medicine,
                         R.drawable.fashion
                 };
 
@@ -186,7 +188,8 @@ public class Home extends Fragment {
                         1,
                         1,
                         1,
-                        3
+                        1,
+                        2
                 };
 
 
@@ -216,7 +219,14 @@ public class Home extends Fragment {
                         Intent intent = new Intent(context, Category.class);
                         intent.putExtra("title", title[position]);
                         context.startActivity(intent);
-                    } else {
+                    }
+                    else if (title[position].equals("Medicines"))
+                    {
+                        Intent intent = new Intent(context, Category3.class);
+                        intent.putExtra("title", title[position]);
+                        context.startActivity(intent);
+                    }
+                    else {
                         Intent intent = new Intent(context, Category2.class);
                         intent.putExtra("title", title[position]);
                         context.startActivity(intent);

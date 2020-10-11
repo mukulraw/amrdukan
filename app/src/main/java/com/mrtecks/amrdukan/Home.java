@@ -212,9 +212,17 @@ public class Home extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    Intent intent = new Intent(context, Category.class);
-                    intent.putExtra("title", title[position]);
-                    context.startActivity(intent);
+                    if (title[position].equals("Foodkart")) {
+                        Intent intent = new Intent(context, Category.class);
+                        intent.putExtra("title", title[position]);
+                        context.startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(context, Category2.class);
+                        intent.putExtra("title", title[position]);
+                        context.startActivity(intent);
+                    }
+
+
 
                     /*FragmentManager fm4 = mainActivity.getSupportFragmentManager();
 

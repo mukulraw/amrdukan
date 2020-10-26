@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation;
 
     ImageView cart;
+    TextView count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         cart = findViewById(R.id.imageView2);
         navigation = findViewById(R.id.bottomNavigationView);
+        count = findViewById(R.id.textView3);
 
         setSupportActionBar(toolbar);
 

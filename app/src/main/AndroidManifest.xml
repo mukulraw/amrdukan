@@ -2,14 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mrtecks.amrdukan">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
+        android:name=".Bean"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Category3"></activity>
+        <activity android:name=".OTP"></activity>
+        <activity android:name=".Login" />
+        <activity android:name=".Category3" />
         <activity android:name=".SingleProduct2" />
         <activity android:name=".Products2" />
         <activity android:name=".Category2" />

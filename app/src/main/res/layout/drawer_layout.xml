@@ -51,6 +51,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_place"
+        android:visibility="gone"
         android:drawablePadding="12dp"
         android:gravity="center_vertical"
         android:paddingStart="16dp"

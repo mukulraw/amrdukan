@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView cart;
     TextView count;
 
+    TextView address, orders, cart1, contact, logout, name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
         cart = findViewById(R.id.imageView2);
         navigation = findViewById(R.id.bottomNavigationView);
         count = findViewById(R.id.textView3);
+        address = findViewById(R.id.textView19);
+        orders = findViewById(R.id.textView20);
+        cart1 = findViewById(R.id.textView21);
+        contact = findViewById(R.id.textView22);
+        logout = findViewById(R.id.textView26);
+        name = findViewById(R.id.textView17);
 
         setSupportActionBar(toolbar);
 
@@ -58,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        name.setText(SharePreferenceUtils.getInstance().getString("phone"));
 
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -81,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
 
                         break;
                     case R.id.action_search:
-
 
 
                         FragmentManager fm1 = getSupportFragmentManager();
@@ -154,6 +164,66 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(MainActivity.this, Address.class);
+                startActivity(intent);
+
+                drawer.closeDrawer(GravityCompat.START);
+
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SharePreferenceUtils.getInstance().deletePref();
+
+                Intent intent = new Intent(MainActivity.this, Splash.class);
+                startActivity(intent);
+                finishAffinity();
+
+            }
+        });
+
+        cart1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                navigation.setSelectedItemId(R.id.action_cart);
+
+                drawer.closeDrawer(GravityCompat.START);
+
+            }
+        });
+
+        contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                navigation.setSelectedItemId(R.id.action_search);
+
+                drawer.closeDrawer(GravityCompat.START);
+
+            }
+        });
+
+
+        orders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                navigation.setSelectedItemId(R.id.action_orders);
+
+                drawer.closeDrawer(GravityCompat.START);
+
+            }
+        });
+
 
         navigation.setSelectedItemId(R.id.action_home);
 

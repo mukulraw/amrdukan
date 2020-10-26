@@ -253,14 +253,17 @@ public class Home extends Fragment {
                     if (item.getType().equals("foodkart")) {
                         Intent intent = new Intent(context, Category.class);
                         intent.putExtra("title", item.getName());
+                        intent.putExtra("cid", item.getId());
                         context.startActivity(intent);
                     } else if (item.getType().equals("medicine")) {
                         Intent intent = new Intent(context, Category3.class);
                         intent.putExtra("title", item.getName());
+                        intent.putExtra("cid", item.getId());
                         context.startActivity(intent);
                     } else {
                         Intent intent = new Intent(context, Category2.class);
                         intent.putExtra("title", item.getName());
+                        intent.putExtra("cid", item.getId());
                         context.startActivity(intent);
                     }
 
@@ -333,10 +336,10 @@ public class Home extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    Intent intent = new Intent(context, SingleProduct.class);
+                    Intent intent = new Intent(context , SingleProduct2.class);
                     intent.putExtra("id", item.getId());
                     intent.putExtra("title", item.getName());
-                    context.startActivity(intent);
+                    startActivity(intent);
 
                 }
             });
@@ -349,7 +352,7 @@ public class Home extends Fragment {
 
                     if (uid.length() > 0) {
 
-                        final Dialog dialog = new Dialog(context);
+                        final Dialog dialog = new Dialog(context, R.style.MyDialogTheme);
                         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         dialog.setCancelable(true);
                         dialog.setContentView(R.layout.add_cart_dialog);

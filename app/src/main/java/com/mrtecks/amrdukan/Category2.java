@@ -15,18 +15,37 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.mrtecks.amrdukan.homePOJO.Banners;
+import com.mrtecks.amrdukan.homePOJO.homeBean;
+import com.mrtecks.amrdukan.subCat1POJO.Datum;
+import com.mrtecks.amrdukan.subCat1POJO.subCat1Bean;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import me.relex.circleindicator.CircleIndicator;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class Category2 extends AppCompatActivity {
 
@@ -35,17 +54,25 @@ public class Category2 extends AppCompatActivity {
     CircleIndicator indicator;
     RecyclerView grid;
     CategoryAdapter adapter2;
+    ProgressBar progress;
+    String cid;
+    List<Datum> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category2);
 
+        cid = getIntent().getStringExtra("cid");
+        list = new ArrayList<>();
+
         toolbar = findViewById(R.id.toolbar2);
         banners = findViewById(R.id.viewPager);
         indicator = findViewById(R.id.indicator);
         grid = findViewById(R.id.grid);
+        progress = findViewById(R.id.progressBar2);
         setSupportActionBar(toolbar);
+
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
@@ -63,63 +90,119 @@ public class Category2 extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle(title);
 
-        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
-        banners.setAdapter(adapter);
-        indicator.setViewPager(banners);
-
-        adapter2 = new CategoryAdapter(this);
+        adapter2 = new CategoryAdapter(this, list);
         GridLayoutManager manager = new GridLayoutManager(this, 3);
 
         grid.setAdapter(adapter2);
         grid.setLayoutManager(manager);
 
+        progress.setVisibility(View.VISIBLE);
+
+        Bean b = (Bean) getApplicationContext();
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.level(HttpLoggingInterceptor.Level.HEADERS);
+        logging.level(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient.Builder().writeTimeout(1000, TimeUnit.SECONDS).readTimeout(1000, TimeUnit.SECONDS).connectTimeout(1000, TimeUnit.SECONDS).addInterceptor(logging).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(b.baseurl)
+                .client(client)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+        Call<homeBean> call = cr.getHome(SharePreferenceUtils.getInstance().getString("userId"));
+        call.enqueue(new Callback<homeBean>() {
+            @Override
+            public void onResponse(Call<homeBean> call, Response<homeBean> response) {
+
+
+                if (response.body().getStatus().equals("1")) {
+
+
+                    final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, response.body().getPbanner());
+                    banners.setAdapter(adapter);
+                    indicator.setViewPager(banners);
+
+                }
+
+                progress.setVisibility(View.GONE);
+
+                Log.d("asdasd", response.body().getMessage());
+
+            }
+
+            @Override
+            public void onFailure(Call<homeBean> call, Throwable t) {
+                progress.setVisibility(View.GONE);
+                Log.d("asdasd", t.toString());
+            }
+        });
+
+        Call<subCat1Bean> call1 = cr.getSubCat1(cid);
+        call1.enqueue(new Callback<subCat1Bean>() {
+            @Override
+            public void onResponse(Call<subCat1Bean> call, Response<subCat1Bean> response) {
+
+                adapter2.setData(response.body().getData());
+
+            }
+
+            @Override
+            public void onFailure(Call<subCat1Bean> call, Throwable t) {
+
+            }
+        });
+
     }
 
     class PagerAdapter extends FragmentStatePagerAdapter {
 
-        int[] banners = new int[]{
-                R.drawable.banner1,
-                R.drawable.banner2,
-                R.drawable.banner3,
-                R.drawable.banner4
-        };
+        List<Banners> blist = new ArrayList<>();
 
-        public PagerAdapter(@NonNull FragmentManager fm, int behavior) {
+        public PagerAdapter(@NonNull FragmentManager fm, int behavior, List<Banners> blist) {
             super(fm, behavior);
+            this.blist = blist;
         }
 
         @NonNull
         @Override
         public Fragment getItem(int position) {
-            Home.page frag = new Home.page();
-            Bundle b = new Bundle();
-            b.putInt("banner", banners[position]);
-            frag.setArguments(b);
+            page frag = new page();
+            frag.setData(blist.get(position).getImage(), blist.get(position).getCname(), blist.get(position).getCid());
             return frag;
         }
 
         @Override
         public int getCount() {
-            return banners.length;
+            return blist.size();
         }
     }
 
     public static class page extends Fragment {
 
-        int banner;
+        String url;
         ImageView image;
+
+        void setData(String url, String tit, String cid) {
+            this.url = url;
+        }
 
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.page, container, false);
 
-            banner = getArguments().getInt("banner");
-
             image = view.findViewById(R.id.image);
 
-            image.setImageDrawable(getActivity().getResources().getDrawable(banner));
+            DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+            ImageLoader loader = ImageLoader.getInstance();
+            loader.displayImage(url, image, options);
 
             return view;
         }
@@ -128,11 +211,18 @@ public class Category2 extends AppCompatActivity {
     class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
         Context context;
+        List<Datum> list = new ArrayList<>();
 
-        public CategoryAdapter(Context context) {
+        public CategoryAdapter(Context context, List<Datum> list) {
             this.context = context;
+            this.list = list;
         }
 
+        public void setData(List<Datum> list)
+        {
+            this.list = list;
+            notifyDataSetChanged();
+        }
 
         @NonNull
         @Override
@@ -145,13 +235,21 @@ public class Category2 extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-            //holder.tag.setText(item.getTag());
+            final Datum item = list.get(position);
+
+            holder.title.setText(item.getName());
+
+            DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+            ImageLoader loader = ImageLoader.getInstance();
+            loader.displayImage(item.getImage(), holder.image, options);
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     Intent intent = new Intent(context , Products2.class);
+                    intent.putExtra("cid", item.getId());
+                    intent.putExtra("title", item.getName());
                     startActivity(intent);
 
                     /*FragmentManager fm4 = mainActivity.getSupportFragmentManager();
@@ -179,17 +277,18 @@ public class Category2 extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return 9;
+            return list.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
 
+            ImageView image;
+            TextView title;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-
-
-
+                image = itemView.findViewById(R.id.imageView5);
+                title = itemView.findViewById(R.id.textView18);
             }
         }
     }

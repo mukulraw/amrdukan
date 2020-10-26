@@ -31,9 +31,6 @@ public class Data {
     @SerializedName("size")
     @Expose
     private String size;
-    @SerializedName("size_description")
-    @Expose
-    private String sizeDescription;
     @SerializedName("description")
     @Expose
     private String description;
@@ -46,41 +43,30 @@ public class Data {
     @SerializedName("unit")
     @Expose
     private String unit;
-    @SerializedName("key_ingredients")
+    @SerializedName("packaging_type")
     @Expose
-    private String keyIngredients;
-    @SerializedName("key_benefits")
+    private String packagingType;
+    @SerializedName("shelf_life")
     @Expose
-    private String keyBenefits;
+    private String shelfLife;
     @SerializedName("seller")
     @Expose
     private String seller;
-    @SerializedName("direction_for_use")
+    @SerializedName("disclaimer")
     @Expose
-    private String directionForUse;
-    @SerializedName("safety_information")
-    @Expose
-    private String safetyInformation;
+    private String disclaimer;
     @SerializedName("status")
     @Expose
     private String status;
-    @SerializedName("stock")
-    @Expose
-    private String stock;
     @SerializedName("created")
     @Expose
     private String created;
-    @SerializedName("favourite")
+    @SerializedName("stock")
     @Expose
-    private String favourite;
-    @SerializedName("rated")
-    @Expose
-    private String rated;
+    private String stock;
     @SerializedName("rating")
     @Expose
     private String rating;
-
-
 
     public String getId() {
         return id;
@@ -154,14 +140,6 @@ public class Data {
         this.size = size;
     }
 
-    public String getSizeDescription() {
-        return sizeDescription;
-    }
-
-    public void setSizeDescription(String sizeDescription) {
-        this.sizeDescription = sizeDescription;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -194,20 +172,20 @@ public class Data {
         this.unit = unit;
     }
 
-    public String getKeyIngredients() {
-        return keyIngredients;
+    public String getPackagingType() {
+        return packagingType;
     }
 
-    public void setKeyIngredients(String keyIngredients) {
-        this.keyIngredients = keyIngredients;
+    public void setPackagingType(String packagingType) {
+        this.packagingType = packagingType;
     }
 
-    public String getKeyBenefits() {
-        return keyBenefits;
+    public String getShelfLife() {
+        return shelfLife;
     }
 
-    public void setKeyBenefits(String keyBenefits) {
-        this.keyBenefits = keyBenefits;
+    public void setShelfLife(String shelfLife) {
+        this.shelfLife = shelfLife;
     }
 
     public String getSeller() {
@@ -218,20 +196,12 @@ public class Data {
         this.seller = seller;
     }
 
-    public String getDirectionForUse() {
-        return directionForUse;
+    public String getDisclaimer() {
+        return disclaimer;
     }
 
-    public void setDirectionForUse(String directionForUse) {
-        this.directionForUse = directionForUse;
-    }
-
-    public String getSafetyInformation() {
-        return safetyInformation;
-    }
-
-    public void setSafetyInformation(String safetyInformation) {
-        this.safetyInformation = safetyInformation;
+    public void setDisclaimer(String disclaimer) {
+        this.disclaimer = disclaimer;
     }
 
     public String getStatus() {
@@ -242,14 +212,6 @@ public class Data {
         this.status = status;
     }
 
-    public String getStock() {
-        return stock;
-    }
-
-    public void setStock(String stock) {
-        this.stock = stock;
-    }
-
     public String getCreated() {
         return created;
     }
@@ -258,24 +220,16 @@ public class Data {
         this.created = created;
     }
 
-    public String getFavourite() {
-        return favourite;
+    public String getStock() {
+        return stock;
     }
 
-    public void setFavourite(String favourite) {
-        this.favourite = favourite;
-    }
-
-    public String getRated() {
-        return rated;
+    public void setStock(String stock) {
+        this.stock = stock;
     }
 
     public String getRating() {
         return rating;
-    }
-
-    public void setRated(String rated) {
-        this.rated = rated;
     }
 
     public void setRating(String rating) {

@@ -24,11 +24,14 @@ public class Category extends AppCompatActivity {
     RecyclerView grid;
     CategoryAdapter adapter;
     GridLayoutManager manager;
+    String cid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
+
+        cid = getIntent().getStringExtra("cid");
 
         toolbar = findViewById(R.id.toolbar2);
         grid = findViewById(R.id.grid);

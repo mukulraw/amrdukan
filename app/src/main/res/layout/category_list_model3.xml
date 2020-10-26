@@ -27,7 +27,6 @@
             android:layout_marginEnd="3dp"
             android:background="#ffffff"
             android:scaleType="centerCrop"
-            android:src="@drawable/category"
             app:layout_constraintDimensionRatio="w,4:5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

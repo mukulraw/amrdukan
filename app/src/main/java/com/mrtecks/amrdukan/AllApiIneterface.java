@@ -41,15 +41,13 @@ public interface AllApiIneterface {
     @Multipart
     @POST("amrdukan/api/getProducts.php")
     Call<productsBean> getProducts(
-            @Part("subcat2") String cat,
-            @Part("user_id") String user_id
+            @Part("subcat1") String subcat1
     );
 
     @Multipart
     @POST("amrdukan/api/getProductById.php")
     Call<singleProductBean> getProductById(
-            @Part("id") String cat,
-            @Part("user_id") String user_id
+            @Part("id") String cat
     );
 
     @Multipart

@@ -86,6 +86,18 @@ public interface AllApiIneterface {
     Call<foodCatBean> getFoodCat();
 
     @Multipart
+    @POST("amrdukan/api/getFoodSubCat.php")
+    Call<foodCatBean> getFoodSubCat(
+            @Part("cat") String cat
+    );
+
+    @Multipart
+    @POST("amrdukan/api/getFoodProducts.php")
+    Call<productsBean> getFoodProducts(
+            @Part("subcat1") String subcat1
+    );
+
+    @Multipart
     @POST("amrdukan/api/addFav.php")
     Call<singleProductBean> addFav(
             @Part("user_id") String user_id,

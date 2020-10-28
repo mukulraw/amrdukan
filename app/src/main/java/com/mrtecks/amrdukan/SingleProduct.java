@@ -12,11 +12,14 @@ import androidx.viewpager.widget.ViewPager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -29,6 +32,8 @@ import com.mrtecks.amrdukan.productsPOJO.Datum;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -56,10 +61,14 @@ public class SingleProduct extends AppCompatActivity {
 
     LinearLayout addon;
 
+    List<String> addids;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_product);
+
+        addids = new ArrayList<>();
 
         cid = getIntent().getStringExtra("cid");
         pid = getIntent().getStringExtra("pid");
@@ -121,7 +130,7 @@ public class SingleProduct extends AppCompatActivity {
             public void onResponse(Call<foodProductBean> call, Response<foodProductBean> response) {
 
                 if (response.body().getStatus().equals("1")) {
-                    Data item = response.body().getData();
+                    final Data item = response.body().getData();
 
                     DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
                     ImageLoader loader = ImageLoader.getInstance();
@@ -168,6 +177,23 @@ public class SingleProduct extends AppCompatActivity {
                             CheckBox check = addonmodel.findViewById(R.id.check);
                             check.setText(item.getAddons().get(i).getTitle() + " (+ ₹" + item.getAddons().get(i).getPrice() + ")");
 
+                            final int finalI = i;
+                            check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                @Override
+                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                                    if (isChecked)
+                                    {
+                                        addids.add(item.getAddons().get(finalI).getId());
+                                    }
+                                    else
+                                    {
+                                        addids.remove(item.getAddons().get(finalI).getId());
+                                    }
+
+                                }
+                            });
+
                             addon.addView(addonmodel);
                         }
 
@@ -187,6 +213,15 @@ public class SingleProduct extends AppCompatActivity {
             @Override
             public void onFailure(Call<foodProductBean> call, Throwable t) {
                 progress.setVisibility(View.GONE);
+            }
+        });
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.d("addons", TextUtils.join(",", addids));
+
             }
         });
 

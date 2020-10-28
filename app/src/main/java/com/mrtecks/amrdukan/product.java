@@ -195,6 +195,21 @@ public class product extends Fragment {
                 }
             });
 
+            holder.add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    Intent intent = new Intent(context, SingleProduct.class);
+                    intent.putExtra("cid", cid);
+                    intent.putExtra("title", item.getName());
+                    intent.putExtra("pid", item.getId());
+                    context.startActivity(intent);
+
+
+                }
+            });
+
 
         }
 

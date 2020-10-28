@@ -5,6 +5,7 @@ import com.mrtecks.amrdukan.addressPOJO.addressBean;
 import com.mrtecks.amrdukan.cartPOJO.cartBean;
 import com.mrtecks.amrdukan.checkPromoPOJO.checkPromoBean;
 import com.mrtecks.amrdukan.checkoutPOJO.checkoutBean;
+import com.mrtecks.amrdukan.foodCatPOJO.foodCatBean;
 import com.mrtecks.amrdukan.homePOJO.homeBean;
 import com.mrtecks.amrdukan.orderDetailsPOJO.orderDetailsBean;
 import com.mrtecks.amrdukan.ordersPOJO.ordersBean;
@@ -15,6 +16,7 @@ import com.mrtecks.amrdukan.subCat1POJO.subCat1Bean;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
+import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -79,6 +81,9 @@ public interface AllApiIneterface {
             @Part("unit_price") String unit_price,
             @Part("version") String version
     );
+
+    @GET("amrdukan/api/getFoodCat.php")
+    Call<foodCatBean> getFoodCat();
 
     @Multipart
     @POST("amrdukan/api/addFav.php")

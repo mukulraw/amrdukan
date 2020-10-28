@@ -14,9 +14,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.mrtecks.amrdukan.foodCatPOJO.Datum;
+import com.mrtecks.amrdukan.foodCatPOJO.foodCatBean;
+import com.mrtecks.amrdukan.homePOJO.homeBean;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class Category extends AppCompatActivity {
 
@@ -24,17 +43,19 @@ public class Category extends AppCompatActivity {
     RecyclerView grid;
     CategoryAdapter adapter;
     GridLayoutManager manager;
-    String cid;
+    List<Datum> list;
+    ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
 
-        cid = getIntent().getStringExtra("cid");
+        list = new ArrayList<>();
 
         toolbar = findViewById(R.id.toolbar2);
         grid = findViewById(R.id.grid);
+        progress = findViewById(R.id.progressBar6);
 
         setSupportActionBar(toolbar);
 
@@ -54,29 +75,64 @@ public class Category extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle(title);
 
-        adapter = new CategoryAdapter(this);
+        adapter = new CategoryAdapter(this, list);
         manager = new GridLayoutManager(this, 1);
 
         grid.setAdapter(adapter);
         grid.setLayoutManager(manager);
 
+        progress.setVisibility(View.VISIBLE);
+
+        Bean b = (Bean) getApplicationContext();
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.level(HttpLoggingInterceptor.Level.HEADERS);
+        logging.level(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient.Builder().writeTimeout(1000, TimeUnit.SECONDS).readTimeout(1000, TimeUnit.SECONDS).connectTimeout(1000, TimeUnit.SECONDS).addInterceptor(logging).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(b.baseurl)
+                .client(client)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+        Call<foodCatBean> call = cr.getFoodCat();
+
+        call.enqueue(new Callback<foodCatBean>() {
+            @Override
+            public void onResponse(Call<foodCatBean> call, Response<foodCatBean> response) {
+
+                adapter.setData(response.body().getData());
+
+                progress.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onFailure(Call<foodCatBean> call, Throwable t) {
+                progress.setVisibility(View.GONE);
+            }
+        });
 
     }
 
     class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
         Context context;
-
-        int[] images = new int[]
-                {
-                        R.drawable.food1,
-                        R.drawable.food2,
-                        R.drawable.food3,
-                        R.drawable.food4
-                };
+        List<Datum> list = new ArrayList<>();
 
 
-        public CategoryAdapter(Context context) {
+        public CategoryAdapter(Context context, List<Datum> list) {
             this.context = context;
+            this.list = list;
+        }
+
+        void setData(List<Datum> list) {
+            this.list = list;
+            notifyDataSetChanged();
         }
 
         @NonNull
@@ -90,7 +146,13 @@ public class Category extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-            holder.image.setImageDrawable(context.getResources().getDrawable(images[position]));
+            Datum item = list.get(position);
+
+            DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+            ImageLoader loader = ImageLoader.getInstance();
+            loader.displayImage(item.getImage(), holder.image, options);
+
+            holder.title.setText(item.getName());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -108,7 +170,7 @@ public class Category extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return images.length;
+            return list.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {

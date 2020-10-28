@@ -2,6 +2,7 @@ package com.mrtecks.amrdukan;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -139,7 +140,7 @@ public class product extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-            Datum item = list.get(position);
+            final Datum item = list.get(position);
 
             DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
             ImageLoader loader = ImageLoader.getInstance();
@@ -147,7 +148,16 @@ public class product extends Fragment {
 
             holder.title.setText(item.getName());
             holder.size.setText(item.getSize());
+            holder.type.setText(item.getType());
 
+            if (item.getType().equals("VEG"))
+            {
+                holder.type.setTextColor(Color.GREEN);
+            }
+            else
+            {
+                holder.type.setTextColor(Color.RED);
+            }
 
             if (item.getStock().equals("In stock")) {
                 holder.add.setVisibility(View.VISIBLE);
@@ -176,6 +186,9 @@ public class product extends Fragment {
 
 
                     Intent intent = new Intent(context, SingleProduct.class);
+                    intent.putExtra("cid", cid);
+                    intent.putExtra("title", item.getName());
+                    intent.putExtra("pid", item.getId());
                     context.startActivity(intent);
 
 

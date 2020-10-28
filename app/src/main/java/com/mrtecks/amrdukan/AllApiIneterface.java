@@ -6,6 +6,7 @@ import com.mrtecks.amrdukan.cartPOJO.cartBean;
 import com.mrtecks.amrdukan.checkPromoPOJO.checkPromoBean;
 import com.mrtecks.amrdukan.checkoutPOJO.checkoutBean;
 import com.mrtecks.amrdukan.foodCatPOJO.foodCatBean;
+import com.mrtecks.amrdukan.foodProductsPOJO.foodProductBean;
 import com.mrtecks.amrdukan.homePOJO.homeBean;
 import com.mrtecks.amrdukan.orderDetailsPOJO.orderDetailsBean;
 import com.mrtecks.amrdukan.ordersPOJO.ordersBean;
@@ -95,6 +96,12 @@ public interface AllApiIneterface {
     @POST("amrdukan/api/getFoodProducts.php")
     Call<productsBean> getFoodProducts(
             @Part("subcat1") String subcat1
+    );
+
+    @Multipart
+    @POST("amrdukan/api/getFoodProductById.php")
+    Call<foodProductBean> getFoodProductById(
+            @Part("id") String id
     );
 
     @Multipart

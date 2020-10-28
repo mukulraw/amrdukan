@@ -58,10 +58,9 @@
             android:paddingTop="2dp"
             android:paddingEnd="8dp"
             android:paddingBottom="2dp"
-            android:text="4.5"
+            android:text="VEG"
             android:textColor="#45A822"
             android:textSize="12sp"
-            app:drawableStartCompat="@drawable/ic_star"
             app:layout_constraintBottom_toBottomOf="@+id/textView38"
             app:layout_constraintStart_toEndOf="@+id/textView38"
             app:layout_constraintTop_toTopOf="@+id/textView38" />

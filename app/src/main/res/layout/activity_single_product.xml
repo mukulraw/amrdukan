@@ -23,13 +23,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Add To Cart"
+        android:background="@drawable/accent_back_round"
         android:minHeight="0dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:background="@drawable/white_back_stroke"
+        android:text="Add To Cart"
+        android:textColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button3"
         app:layout_constraintHorizontal_bias="0.5"
@@ -45,6 +46,7 @@
         android:textColor="#ffffff"
         android:minHeight="0dp"
         android:paddingTop="8dp"
+        android:visibility="gone"
         android:paddingBottom="8dp"
         android:background="@drawable/accent_back_round"
         app:layout_constraintBottom_toBottomOf="@+id/button2"
@@ -64,10 +66,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.viewpager.widget.ViewPager
+            <ImageView
                 android:id="@+id/viewPager2"
                 android:layout_width="0dp"
-                android:layout_height="350dp"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -76,6 +80,7 @@
                 android:id="@+id/indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/viewPager2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/viewPager2" />
@@ -83,6 +88,7 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="0dp"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -97,7 +103,6 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:gravity="center"
-                android:text="Chicken chop"
                 android:textColor="#000000"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -135,7 +140,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="1 Kg"
+                        android:id="@+id/size"
                         android:textColor="@color/colorAccent"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -177,18 +182,18 @@
                         android:layout_gravity="center_horizontal"
                         android:drawablePadding="5dp"
                         android:gravity="center_horizontal"
-                        android:text="4.5"
+                        android:text=""
+                        android:id="@+id/type"
                         android:textColor="@color/colorAccent"
                         android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:drawableStartCompat="@drawable/ic_star" />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:gravity="center_horizontal"
-                        android:text="Rating"
+                        android:text="Type"
                         android:textColor="#000000"
                         android:textStyle="bold" />
 
@@ -203,7 +208,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="4dp"
-                android:text="₹ 10"
                 android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -218,7 +222,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:text="₹ 12"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -254,7 +257,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="This Item Is available from 5pm - 10 pm" />
+                    android:id="@+id/description" />
 
 
             </LinearLayout>
@@ -275,6 +278,17 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar7"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

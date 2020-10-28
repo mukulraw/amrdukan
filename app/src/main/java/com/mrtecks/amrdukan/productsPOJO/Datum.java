@@ -25,6 +25,9 @@ public class Datum {
     @SerializedName("price")
     @Expose
     private String price;
+    @SerializedName("type")
+    @Expose
+    private String type;
     @SerializedName("discount")
     @Expose
     private String discount;
@@ -234,5 +237,13 @@ public class Datum {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

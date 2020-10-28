@@ -146,7 +146,7 @@ public class Category extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
-            Datum item = list.get(position);
+            final Datum item = list.get(position);
 
             DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
             ImageLoader loader = ImageLoader.getInstance();
@@ -159,6 +159,8 @@ public class Category extends AppCompatActivity {
                 public void onClick(View view) {
 
                     Intent intent = new Intent(context, Products.class);
+                    intent.putExtra("title", item.getName());
+                    intent.putExtra("cid", item.getId());
                     context.startActivity(intent);
 
                 }

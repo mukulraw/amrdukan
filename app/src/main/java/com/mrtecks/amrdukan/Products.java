@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,22 +17,28 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.tabs.TabLayout;
+
 import java.util.Objects;
 
 public class Products extends AppCompatActivity {
 
     Toolbar toolbar;
-    RecyclerView grid;
-    CategoryAdapter adapter;
-    GridLayoutManager manager;
+    TabLayout tabs;
+    ViewPager pager;
+    String cid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
 
+        cid = getIntent().getStringExtra("cid");
+
         toolbar = findViewById(R.id.toolbar3);
-        grid = findViewById(R.id.grid);
+        tabs = findViewById(R.id.tabLayout2);
+        pager = findViewById(R.id.pager);
+
 
         setSupportActionBar(toolbar);
 
@@ -47,63 +54,10 @@ public class Products extends AppCompatActivity {
         });
 
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setTitle("Category Title");
+        toolbar.setTitle(getIntent().getStringExtra("title"));
 
-        adapter = new CategoryAdapter(this);
-        manager = new GridLayoutManager(this, 2);
-
-        grid.setAdapter(adapter);
-        grid.setLayoutManager(manager);
 
     }
 
-    class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
-        Context context;
-
-
-        public CategoryAdapter(Context context) {
-            this.context = context;
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.product_list_model, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-
-
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-
-                    Intent intent = new Intent(context, SingleProduct.class);
-                    context.startActivity(intent);
-
-
-                }
-            });
-
-
-        }
-
-
-        @Override
-        public int getItemCount() {
-            return 8;
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-            }
-        }
-    }
 
 }

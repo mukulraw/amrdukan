@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
+import com.mrtecks.amrdukan.cartPOJO.cartBean;
 import com.mrtecks.amrdukan.foodCatPOJO.Datum;
 import com.mrtecks.amrdukan.foodCatPOJO.foodCatBean;
 
@@ -49,6 +50,11 @@ public class Products extends AppCompatActivity {
     String cid;
     ProgressBar progress;
 
+
+    TextView btotal, bcount, bview;
+    View cart_bottom;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +66,11 @@ public class Products extends AppCompatActivity {
         tabs = findViewById(R.id.tabLayout2);
         pager = findViewById(R.id.pager);
         progress = findViewById(R.id.progressBar8);
+        cart_bottom = findViewById(R.id.cart_bottom);
+        btotal = findViewById(R.id.textView9);
+        bcount = findViewById(R.id.textView3);
+        bview = findViewById(R.id.textView10);
+
 
 
         setSupportActionBar(toolbar);
@@ -113,6 +124,65 @@ public class Products extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<foodCatBean> call, Throwable t) {
+                progress.setVisibility(View.GONE);
+            }
+        });
+
+        bview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(Products.this, Cart2.class);
+                intent.putExtra("cid", cid);
+                startActivity(intent);
+
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Bean b = (Bean) getApplicationContext();
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.level(HttpLoggingInterceptor.Level.HEADERS);
+        logging.level(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient client = new OkHttpClient.Builder().writeTimeout(1000, TimeUnit.SECONDS).readTimeout(1000, TimeUnit.SECONDS).connectTimeout(1000, TimeUnit.SECONDS).addInterceptor(logging).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(b.baseurl)
+                .client(client)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+        Call<cartBean> call2 = cr.getFoodCart(SharePreferenceUtils.getInstance().getString("userId"), cid);
+        call2.enqueue(new Callback<cartBean>() {
+            @Override
+            public void onResponse(Call<cartBean> call, Response<cartBean> response) {
+
+                if (response.body().getData().size() > 0) {
+
+                    btotal.setText("Total: \u20B9 " + response.body().getTotal());
+                    bcount.setText(response.body().getItems());
+
+                    cart_bottom.setVisibility(View.VISIBLE);
+                } else {
+                    cart_bottom.setVisibility(View.GONE);
+                }
+
+                progress.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onFailure(Call<cartBean> call, Throwable t) {
                 progress.setVisibility(View.GONE);
             }
         });

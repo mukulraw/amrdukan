@@ -243,7 +243,7 @@ public class SingleProduct2 extends AppCompatActivity {
                         price.setText(Html.fromHtml("<font color=\"#000000\"><b>\u20B9 " + nv1 + " </b></font><strike>\u20B9 " + item.getPrice() + "</strike>"));
                     } else {
 
-                        nv1 = item.getPrice();
+                        nv1 = item.getDiscount();
                         discount.setVisibility(View.GONE);
                         price.setText(Html.fromHtml("<font color=\"#000000\"><b>\u20B9 " + String.valueOf(item.getPrice()) + " </b></font>"));
                     }

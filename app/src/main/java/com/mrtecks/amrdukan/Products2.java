@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mrtecks.amrdukan.cartPOJO.cartBean;
 import com.mrtecks.amrdukan.productsPOJO.Datum;
 import com.mrtecks.amrdukan.productsPOJO.productsBean;
 import com.mrtecks.amrdukan.seingleProductPOJO.singleProductBean;
@@ -68,7 +69,6 @@ public class Products2 extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar2);
         grid = findViewById(R.id.grid);
         progress = findViewById(R.id.progressBar4);
-
         setSupportActionBar(toolbar);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
@@ -137,6 +137,11 @@ public class Products2 extends AppCompatActivity {
                 progress.setVisibility(View.GONE);
             }
         });
+
+
+
+
+
 
     }
 

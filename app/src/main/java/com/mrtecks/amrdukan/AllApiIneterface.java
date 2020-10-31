@@ -83,6 +83,9 @@ public interface AllApiIneterface {
             @Part("version") String version
     );
 
+    @GET("amrdukan/api/getFoodBanner.php")
+    Call<foodCatBean> getFoodBanner();
+
     @GET("amrdukan/api/getFoodCat.php")
     Call<foodCatBean> getFoodCat();
 
@@ -102,6 +105,18 @@ public interface AllApiIneterface {
     @POST("amrdukan/api/getFoodProductById.php")
     Call<foodProductBean> getFoodProductById(
             @Part("id") String id
+    );
+
+    @Multipart
+    @POST("amrdukan/api/addFoodCart.php")
+    Call<singleProductBean> addFoodCart(
+            @Part("user_id") String user_id,
+            @Part("product_id") String product_id,
+            @Part("quantity") String quantity,
+            @Part("unit_price") String unit_price,
+            @Part("reataurant") String reataurant,
+            @Part("addon") String addon,
+            @Part("request") String request
     );
 
     @Multipart
@@ -135,8 +150,22 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("amrdukan/api/updateFoodCart.php")
+    Call<singleProductBean> updateFoodCart(
+            @Part("id") String id,
+            @Part("quantity") String quantity,
+            @Part("unit_price") String unit_price
+    );
+
+    @Multipart
     @POST("amrdukan/api/deleteCart.php")
     Call<singleProductBean> deleteCart(
+            @Part("id") String id
+    );
+
+    @Multipart
+    @POST("amrdukan/api/deleteFoodCart.php")
+    Call<singleProductBean> deleteFoodCart(
             @Part("id") String id
     );
 
@@ -150,6 +179,13 @@ public interface AllApiIneterface {
     @POST("amrdukan/api/clearCart.php")
     Call<singleProductBean> clearCart(
             @Part("user_id") String user_id
+    );
+
+    @Multipart
+    @POST("amrdukan/api/clearFoodCart.php")
+    Call<singleProductBean> clearFoodCart(
+            @Part("user_id") String user_id,
+            @Part("reataurant") String reataurant
     );
 
     @Multipart
@@ -168,6 +204,13 @@ public interface AllApiIneterface {
     @POST("amrdukan/api/getCart.php")
     Call<cartBean> getCart(
             @Part("user_id") String user_id
+    );
+
+    @Multipart
+    @POST("amrdukan/api/getFoodCart.php")
+    Call<cartBean> getFoodCart(
+            @Part("user_id") String user_id,
+            @Part("reataurant") String reataurant
     );
 
     @Multipart
@@ -206,6 +249,26 @@ public interface AllApiIneterface {
             @Part("city") String city,
             @Part("pin") String pin,
             @Part("isnew") String isnew
+    );
+
+    @Multipart
+    @POST("amrdukan/api/buyVouchers2.php")
+    Call<checkoutBean> buyVouchers2(
+            @Part("user_id") String user_id,
+            @Part("amount") String amount,
+            @Part("txn") String txn,
+            @Part("name") String name,
+            @Part("address") String address,
+            @Part("pay_mode") String pay_mode,
+            @Part("slot") String slot,
+            @Part("date") String date,
+            @Part("promo") String promo,
+            @Part("house") String house,
+            @Part("area") String area,
+            @Part("city") String city,
+            @Part("pin") String pin,
+            @Part("isnew") String isnew,
+            @Part("restaurant") String restaurant
     );
 
     @Multipart

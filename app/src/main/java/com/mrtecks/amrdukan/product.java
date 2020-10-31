@@ -152,7 +152,7 @@ public class product extends Fragment {
 
             if (item.getType().equals("VEG"))
             {
-                holder.type.setTextColor(Color.GREEN);
+                holder.type.setTextColor(Color.parseColor("#45A822"));
             }
             else
             {

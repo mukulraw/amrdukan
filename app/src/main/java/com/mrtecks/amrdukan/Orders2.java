@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 
-public class Orders extends Fragment {
+public class Orders2 extends Fragment {
 
     ProgressBar progress;
     RecyclerView grid;
@@ -88,7 +87,7 @@ public class Orders extends Fragment {
 
 
 
-        Call<ordersBean> call = cr.getOrders(SharePreferenceUtils.getInstance().getString("userId"));
+        Call<ordersBean> call = cr.getFoodOrders(SharePreferenceUtils.getInstance().getString("userId"));
         call.enqueue(new Callback<ordersBean>() {
             @Override
             public void onResponse(Call<ordersBean> call, Response<ordersBean> response) {
@@ -162,13 +161,13 @@ public class Orders extends Fragment {
             viewHolder.slot.setText(item.getSlot());
             viewHolder.amount.setText("\u20B9 " + item.getAmount());
 
-            viewHolder.deldate.setText(item.getDelivery_date());
+            viewHolder.deldate.setText(item.getCreated());
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(context , OrderDetails.class);
+                    Intent intent = new Intent(context , OrderDetails2.class);
                     intent.putExtra("oid" , item.getId());
                     startActivity(intent);
 

@@ -195,6 +195,12 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("amrdukan/api/getFoodOrderDetails.php")
+    Call<orderDetailsBean> getFoodOrderDetails(
+            @Part("order_id") String order_id
+    );
+
+    @Multipart
     @POST("amrdukan/api/getFav.php")
     Call<orderDetailsBean> getFav(
             @Part("user_id") String user_id
@@ -216,6 +222,12 @@ public interface AllApiIneterface {
     @Multipart
     @POST("amrdukan/api/getOrders.php")
     Call<ordersBean> getOrders(
+            @Part("user_id") String user_id
+    );
+
+    @Multipart
+    @POST("amrdukan/api/getFoodOrders.php")
+    Call<ordersBean> getFoodOrders(
             @Part("user_id") String user_id
     );
 

@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
                         FragmentTransaction ft31 = fm31.beginTransaction();
                         ft31.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                        Orders frag131 = new Orders();
+                        NewOrder frag131 = new NewOrder();
                         ft31.replace(R.id.replace, frag131);
                         //ft.addToBackStack(null);
                         ft31.commit();

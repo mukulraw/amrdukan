@@ -25,6 +25,12 @@ public class Datum {
     @SerializedName("image")
     @Expose
     private String image;
+    @SerializedName("addon")
+    @Expose
+    private String addon;
+    @SerializedName("request")
+    @Expose
+    private String request;
 
     public String getOrderId() {
         return orderId;
@@ -80,5 +86,21 @@ public class Datum {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getAddon() {
+        return addon;
+    }
+
+    public String getRequest() {
+        return request;
+    }
+
+    public void setAddon(String addon) {
+        this.addon = addon;
+    }
+
+    public void setRequest(String request) {
+        this.request = request;
     }
 }

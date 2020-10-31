@@ -34,7 +34,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class OrderDetails extends AppCompatActivity {
+public class OrderDetails2 extends AppCompatActivity {
 
     Toolbar toolbar;
     RecyclerView grid;
@@ -46,7 +46,7 @@ public class OrderDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_details);
+        setContentView(R.layout.activity_order_details2);
 
         oid = getIntent().getStringExtra("oid");
 
@@ -101,7 +101,7 @@ public class OrderDetails extends AppCompatActivity {
 
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
-        Call<orderDetailsBean> call = cr.getOrderDetails(oid);
+        Call<orderDetailsBean> call = cr.getFoodOrderDetails(oid);
         call.enqueue(new Callback<orderDetailsBean>() {
             @Override
             public void onResponse(Call<orderDetailsBean> call, Response<orderDetailsBean> response) {
@@ -147,7 +147,7 @@ public class OrderDetails extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.category_list_model4 , parent , false);
+            View view = inflater.inflate(R.layout.category_list_model5 , parent , false);
             return new ViewHolder(view);
         }
 
@@ -165,6 +165,18 @@ public class OrderDetails extends AppCompatActivity {
             holder.title.setText(item.getName());
             holder.price.setText("Price - ₹ " + item.getPrice());
 
+            if (item.getRequest().length() > 0) {
+                holder.request.setText("(Special Request: " + item.getRequest() + " )");
+            }
+
+            if (item.getAddon().length() > 0) {
+                holder.addon.setText("Addon: " + item.getAddon());
+                holder.addon.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                holder.addon.setVisibility(View.GONE);
+            }
 
 
         }
@@ -178,7 +190,7 @@ public class OrderDetails extends AppCompatActivity {
         {
 
             ImageView image;
-            TextView quantity, title , price;
+            TextView quantity, title , price, addon, request;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -187,7 +199,8 @@ public class OrderDetails extends AppCompatActivity {
                 title = itemView.findViewById(R.id.textView17);
                 quantity = itemView.findViewById(R.id.textView18);
                 price = itemView.findViewById(R.id.textView19);
-
+                addon = itemView.findViewById(R.id.textView81);
+                request = itemView.findViewById(R.id.textView82);
 
             }
         }

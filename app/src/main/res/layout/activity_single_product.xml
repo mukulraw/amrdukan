@@ -162,7 +162,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:background="#cdcdcd" />
+                    android:background="#cdcdcd"
+                    tools:ignore="Suspicious0dp" />
 
                 <LinearLayout
                     android:layout_width="0dp"

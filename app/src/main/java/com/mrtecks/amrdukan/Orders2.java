@@ -139,7 +139,7 @@ public class Orders2 extends Fragment {
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View view = inflater.inflate(R.layout.order_list_item, viewGroup, false);
+            View view = inflater.inflate(R.layout.order_list_item3, viewGroup, false);
 
             return new ViewHolder(view);
         }

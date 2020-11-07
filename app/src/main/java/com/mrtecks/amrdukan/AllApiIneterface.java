@@ -318,4 +318,10 @@ public interface AllApiIneterface {
             @Part("isnew") String isnew
     );
 
+    @Multipart
+    @POST("amrdukan/api/getLogs.php")
+    Call<trackBean> getLogs(
+            @Part("order_id") String order_id
+    );
+
 }

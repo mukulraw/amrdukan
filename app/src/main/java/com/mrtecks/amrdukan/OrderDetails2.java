@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mrtecks.amrdukan.orderDetailsPOJO.Datum;
 import com.mrtecks.amrdukan.orderDetailsPOJO.orderDetailsBean;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -41,7 +43,8 @@ public class OrderDetails2 extends AppCompatActivity {
     ProgressBar progress;
     List<Datum> list;
     CategoryAdapter adapter;
-    String oid;
+    String oid, status;
+    FloatingActionButton track;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +52,14 @@ public class OrderDetails2 extends AppCompatActivity {
         setContentView(R.layout.activity_order_details2);
 
         oid = getIntent().getStringExtra("oid");
+        status = getIntent().getStringExtra("status");
 
         list = new ArrayList<>();
 
         toolbar = findViewById(R.id.toolbar2);
         grid = findViewById(R.id.grid);
         progress = findViewById(R.id.progressBar2);
+        track = findViewById(R.id.floatingActionButton);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -75,6 +80,23 @@ public class OrderDetails2 extends AppCompatActivity {
 
         grid.setAdapter(adapter);
         grid.setLayoutManager(manager);
+
+        if (status.equals("out for delivery")) {
+            track.setVisibility(View.VISIBLE);
+        } else {
+            track.setVisibility(View.GONE);
+        }
+
+        track.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(OrderDetails2.this, MapsActivity.class);
+                intent.putExtra("order", oid);
+                startActivity(intent);
+
+            }
+        });
 
     }
 

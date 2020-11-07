@@ -169,6 +169,7 @@ public class Orders2 extends Fragment {
 
                     Intent intent = new Intent(context , OrderDetails2.class);
                     intent.putExtra("oid" , item.getId());
+                    intent.putExtra("status" , item.getStatus());
                     startActivity(intent);
 
                 }

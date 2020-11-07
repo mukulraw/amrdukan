@@ -371,8 +371,8 @@ public class Checkout2 extends AppCompatActivity {
 
                                             Call<checkoutBean> call = cr.buyVouchers2(
                                                     SharePreferenceUtils.getInstance().getString("userId"),
-                                                    //SharePreferenceUtils.getInstance().getString("lat"),
-                                                    //SharePreferenceUtils.getInstance().getString("lng"),
+                                                    SharePreferenceUtils.getInstance().getString("lat"),
+                                                    SharePreferenceUtils.getInstance().getString("lng"),
                                                     gtotal,
                                                     oid,
                                                     n,

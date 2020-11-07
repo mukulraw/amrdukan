@@ -248,6 +248,8 @@ public interface AllApiIneterface {
     @POST("amrdukan/api/buyVouchers.php")
     Call<checkoutBean> buyVouchers(
             @Part("user_id") String user_id,
+            @Part("latitude") String latitude,
+            @Part("longitude") String longitude,
             @Part("amount") String amount,
             @Part("txn") String txn,
             @Part("name") String name,
@@ -267,6 +269,8 @@ public interface AllApiIneterface {
     @POST("amrdukan/api/buyVouchers2.php")
     Call<checkoutBean> buyVouchers2(
             @Part("user_id") String user_id,
+            @Part("latitude") String latitude,
+            @Part("longitude") String longitude,
             @Part("amount") String amount,
             @Part("txn") String txn,
             @Part("name") String name,

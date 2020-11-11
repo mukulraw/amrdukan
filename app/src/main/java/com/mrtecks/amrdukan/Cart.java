@@ -59,7 +59,7 @@ public class Cart extends Fragment {
     MainActivity mainActivity;
 
     TextView amount, gst, delivery, grand;
-    float del = 25;
+    float del = 40;
     float gs = 0;
     float mem = 0;
     float gt = 0;
@@ -200,9 +200,9 @@ public class Cart extends Fragment {
                     amm = Float.parseFloat(response.body().getTotal());
 
                     if (amm >= 1000) {
-                        del = 0;
+                        del = 40;
                     } else {
-                        del = 0;
+                        del = 40;
                     }
 
                     gs = 0;

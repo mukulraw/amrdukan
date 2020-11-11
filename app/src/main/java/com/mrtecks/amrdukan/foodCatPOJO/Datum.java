@@ -19,6 +19,9 @@ public class Datum {
     @SerializedName("description")
     @Expose
     private String description;
+    @SerializedName("rating")
+    @Expose
+    private String rating;
 
     public String getId() {
         return id;
@@ -58,5 +61,13 @@ public class Datum {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 }

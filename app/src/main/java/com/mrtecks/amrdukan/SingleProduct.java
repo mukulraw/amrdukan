@@ -252,7 +252,6 @@ public class SingleProduct extends AppCompatActivity {
                 Button add = dialog.findViewById(R.id.button8);
                 final ProgressBar progressBar = dialog.findViewById(R.id.progressBar2);
 
-
                 stepperTouch.setMinValue(1);
                 stepperTouch.setMaxValue(99);
                 stepperTouch.setSideTapEnabled(true);

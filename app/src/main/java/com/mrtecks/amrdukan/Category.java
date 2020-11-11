@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -246,6 +247,8 @@ public class Category extends AppCompatActivity {
             holder.title.setText(item.getName());
             holder.desc.setText(item.getDescription());
 
+            holder.rating.setRating(Float.parseFloat(item.getRating()));
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -271,12 +274,14 @@ public class Category extends AppCompatActivity {
 
             RoundedImageView image;
             TextView title, desc;
+            RatingBar rating;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 image = itemView.findViewById(R.id.imageView21);
                 title = itemView.findViewById(R.id.textView67);
                 desc = itemView.findViewById(R.id.textView68);
+                rating = itemView.findViewById(R.id.ratingBar);
             }
         }
     }

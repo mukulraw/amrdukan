@@ -833,8 +833,17 @@ public class Home extends Fragment {
                         try {
                             addresses = geocoder.getFromLocation(Double.parseDouble(SharePreferenceUtils.getInstance().getString("lat")), Double.parseDouble(SharePreferenceUtils.getInstance().getString("lng")), 1);
                             //mainActivity.toolbar.setSubtitle(addresses.get(0).getPostalCode());
+                            Log.d("addresses", String.valueOf(addresses));
+                            Log.d("getAdminArea", addresses.get(0).getAdminArea());
+                            Log.d("getSubAdminArea", addresses.get(0).getSubAdminArea());
+                            Log.d("getLocality", addresses.get(0).getLocality());
+                            Log.d("getSubLocality", addresses.get(0).getSubLocality());
+                            Log.d("getPostalCode", addresses.get(0).getPostalCode());
                             Toast.makeText(mainActivity, "Your location: - " + addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
                             SharePreferenceUtils.getInstance().saveString("deliveryLocation", addresses.get(0).getAddressLine(0));
+                            SharePreferenceUtils.getInstance().saveString("getcity", addresses.get(0).getLocality());
+                            SharePreferenceUtils.getInstance().saveString("getlocality", addresses.get(0).getSubLocality());
+                            SharePreferenceUtils.getInstance().saveString("getpincode", addresses.get(0).getPostalCode());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

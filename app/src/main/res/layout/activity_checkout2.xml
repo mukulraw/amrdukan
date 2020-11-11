@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:text="House/ Apartment No. *"
+                android:text="Address*"
                 android:textColor="#000"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText2" />
@@ -94,7 +94,7 @@
                 android:background="@drawable/white_back_round2"
                 android:gravity="start"
                 android:hint="tap to enter"
-                android:inputType="textPostalAddress"
+                android:lines="4"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -131,11 +131,11 @@
                 <RadioButton
                     android:id="@+id/online"
                     android:layout_width="wrap_content"
-                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:text="Online Gateway"
-                    android:textColor="#000" />
+                    android:textColor="#000"
+                    android:visibility="gone" />
 
             </RadioGroup>
 
@@ -156,15 +156,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView79" />
 
 
-
             <TextView
                 android:id="@+id/textView44"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:text="Locality/ Area/ District *"
+                android:text="Locality*"
                 android:textColor="@color/black"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText3" />
 
@@ -179,6 +179,7 @@
                 android:hint="tap to enter"
                 android:inputType="textPostalAddress"
                 android:padding="10dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -192,6 +193,7 @@
                 android:layout_marginTop="16dp"
                 android:text="City *"
                 android:textColor="@color/black"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText5" />
 
@@ -207,6 +209,7 @@
                 android:hint="tap to enter"
                 android:inputType="textPersonName"
                 android:padding="10dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView45" />
@@ -219,6 +222,7 @@
                 android:layout_marginTop="16dp"
                 android:text="PIN Code *"
                 android:textColor="@color/black"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText6" />
 
@@ -234,6 +238,7 @@
                 android:hint="tap to enter"
                 android:inputType="number"
                 android:padding="10dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView46" />
@@ -260,9 +265,9 @@
                 android:gravity="start|center_vertical"
                 android:text="₹ 0"
                 android:textColor="@color/black"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@+id/textView53"
-                app:layout_constraintTop_toBottomOf="@+id/textView49"
-                android:visibility="gone" />
+                app:layout_constraintTop_toBottomOf="@+id/textView49" />
 
             <TextView
                 android:id="@+id/textView51"
@@ -274,9 +279,9 @@
                 android:text="TextView"
                 android:textColor="@color/black"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView50"
-                android:visibility="gone" />
+                app:layout_constraintTop_toBottomOf="@+id/textView50" />
 
             <TextView
                 android:id="@+id/textView52"
@@ -287,9 +292,9 @@
                 android:text="Grand Total: "
                 android:textColor="@color/black"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/textView51"
-                app:layout_constraintTop_toBottomOf="@+id/textView53"
-                android:visibility="gone" />
+                app:layout_constraintTop_toBottomOf="@+id/textView53" />
 
             <TextView
                 android:id="@+id/textView53"
@@ -299,9 +304,9 @@
                 android:layout_marginEnd="8dp"
                 android:text="Delivery Charges: "
                 android:textColor="@color/black"
+                android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/textView51"
-                app:layout_constraintTop_toBottomOf="@+id/textView54"
-                android:visibility="gone" />
+                app:layout_constraintTop_toBottomOf="@+id/textView54" />
 
             <TextView
                 android:id="@+id/textView54"
@@ -339,12 +344,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="APPLY"
+                android:background="@drawable/green_back_round2"
                 android:minHeight="0dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:text="APPLY"
                 android:textColor="@color/white"
-                android:background="@drawable/green_back_round2"
                 app:layout_constraintBottom_toBottomOf="@+id/editText8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -372,7 +377,7 @@
                 android:background="@drawable/white_back_round2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView65" >
+                app:layout_constraintTop_toBottomOf="@+id/textView65">
 
                 <Spinner
                     android:id="@+id/spinner2"
@@ -395,6 +400,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText8" />
+
+            <TextView
+                android:id="@+id/textView84"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="GET LOCATION"
+                android:textColor="@color/green"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText2" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

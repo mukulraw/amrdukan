@@ -94,7 +94,7 @@
                 android:background="@drawable/white_back_round2"
                 android:gravity="start"
                 android:hint="tap to enter"
-                android:inputType="textPostalAddress"
+                android:lines="4"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -194,6 +194,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:text="Locality/ Area/ District *"
+                android:visibility="gone"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText3" />
@@ -208,6 +209,7 @@
                 android:background="@drawable/white_back_round2"
                 android:hint="tap to enter"
                 android:inputType="textPostalAddress"
+                android:visibility="gone"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -221,6 +223,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:text="City *"
+                android:visibility="gone"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText5" />
@@ -232,6 +235,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:visibility="gone"
                 android:background="@drawable/white_back_round2"
                 android:ems="10"
                 android:hint="tap to enter"
@@ -248,6 +252,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:text="PIN Code *"
+                android:visibility="gone"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText6" />
@@ -260,6 +265,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/white_back_round2"
+                android:visibility="gone"
                 android:ems="10"
                 android:hint="tap to enter"
                 android:inputType="number"
@@ -450,6 +456,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText8" />
+
+            <TextView
+                android:id="@+id/textView84"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="GET LOCATION"
+                android:textColor="@color/green"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText2" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

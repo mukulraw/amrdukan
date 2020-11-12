@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -37,17 +38,17 @@ public class Orders2 extends Fragment {
     GridLayoutManager manager;
 
     List<Datum> list;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_orders , container , false);
+        View view = inflater.inflate(R.layout.activity_orders, container, false);
 
 
         list = new ArrayList<>();
 
         progress = view.findViewById(R.id.progressBar3);
         grid = view.findViewById(R.id.grid);
-
 
 
         adapter = new OrdersAdapter(list, getActivity());
@@ -59,8 +60,6 @@ public class Orders2 extends Fragment {
 
         return view;
     }
-
-
 
 
     @Override
@@ -84,7 +83,6 @@ public class Orders2 extends Fragment {
                 .build();
 
         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
-
 
 
         Call<ordersBean> call = cr.getFoodOrders(SharePreferenceUtils.getInstance().getString("userId"));
@@ -163,13 +161,31 @@ public class Orders2 extends Fragment {
 
             viewHolder.deldate.setText(item.getCreated());
 
+            if (item.getStatus().equals("out for delivery")) {
+                viewHolder.track.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.track.setVisibility(View.GONE);
+            }
+
+            viewHolder.track.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent(context, MapsActivity.class);
+                    intent.putExtra("order", item.getId());
+                    startActivity(intent);
+
+                }
+            });
+
+
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent = new Intent(context , OrderDetails2.class);
-                    intent.putExtra("oid" , item.getId());
-                    intent.putExtra("status" , item.getStatus());
+                    Intent intent = new Intent(context, OrderDetails2.class);
+                    intent.putExtra("oid", item.getId());
+                    intent.putExtra("status", item.getStatus());
                     startActivity(intent);
 
                 }
@@ -184,7 +200,8 @@ public class Orders2 extends Fragment {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView txn , date , status , name , address , amount , pay , slot , deldate;
+            TextView txn, date, status, name, address, amount, pay, slot, deldate;
+            Button track;
 
 
             ViewHolder(@NonNull View itemView) {
@@ -199,6 +216,7 @@ public class Orders2 extends Fragment {
                 pay = itemView.findViewById(R.id.textView40);
                 slot = itemView.findViewById(R.id.textView62);
                 deldate = itemView.findViewById(R.id.textView42);
+                track = itemView.findViewById(R.id.button11);
 
 
             }

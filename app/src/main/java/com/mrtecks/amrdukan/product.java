@@ -343,7 +343,7 @@ public class product extends Fragment {
 
             ImageView image;
             TextView title, size, type, selling, mrp;
-            ImageButton add;
+            Button add;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);

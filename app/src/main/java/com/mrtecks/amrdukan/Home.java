@@ -825,6 +825,7 @@ public class Home extends Fragment {
                         SharePreferenceUtils.getInstance().saveString("lng", lng);
 
                         Log.d("lat123", lat);
+                        Log.d("lat123", lng);
 
                         LocationServices.getFusedLocationProviderClient(mainActivity).removeLocationUpdates(this);
 

@@ -18,6 +18,9 @@ public class cartBean {
     @SerializedName("items")
     @Expose
     private String items;
+    @SerializedName("delcharges")
+    @Expose
+    private String delcharges;
     @SerializedName("data")
     @Expose
     private List<Datum> data = null;
@@ -60,5 +63,13 @@ public class cartBean {
 
     public void setData(List<Datum> data) {
         this.data = data;
+    }
+
+    public String getDelcharges() {
+        return delcharges;
+    }
+
+    public void setDelcharges(String delcharges) {
+        this.delcharges = delcharges;
     }
 }

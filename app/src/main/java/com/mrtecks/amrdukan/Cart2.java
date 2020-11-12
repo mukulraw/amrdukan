@@ -200,7 +200,12 @@ public class Cart2 extends AppCompatActivity {
         Log.d("userid", SharePreferenceUtils.getInstance().getString("userId"));
 
 
-        Call<cartBean> call = cr.getFoodCart(SharePreferenceUtils.getInstance().getString("userId"), cid);
+        Call<cartBean> call = cr.getFoodCart(
+                SharePreferenceUtils.getInstance().getString("userId"),
+                cid,
+                SharePreferenceUtils.getInstance().getString("lat"),
+                SharePreferenceUtils.getInstance().getString("lng")
+        );
         call.enqueue(new Callback<cartBean>() {
             @Override
             public void onResponse(Call<cartBean> call, Response<cartBean> response) {
@@ -212,14 +217,9 @@ public class Cart2 extends AppCompatActivity {
 
                     amm = Float.parseFloat(response.body().getTotal());
 
-                    if (amm >= 1000) {
-                        del = 0;
-                    } else {
-                        del = 0;
-                    }
+                    del = Float.parseFloat(response.body().getDelcharges());
 
                     gs = 0;
-
 
                     delivery.setText("₹ " + del);
                     gst.setText("₹ " + gs);

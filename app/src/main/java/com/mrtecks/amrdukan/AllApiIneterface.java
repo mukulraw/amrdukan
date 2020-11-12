@@ -216,7 +216,9 @@ public interface AllApiIneterface {
     @POST("amrdukan/api/getFoodCart.php")
     Call<cartBean> getFoodCart(
             @Part("user_id") String user_id,
-            @Part("reataurant") String reataurant
+            @Part("reataurant") String reataurant,
+            @Part("latitude") String latitude,
+            @Part("longitude") String longitude
     );
 
     @Multipart

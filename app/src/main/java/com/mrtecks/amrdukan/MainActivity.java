@@ -9,17 +9,31 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.hsalf.smileyrating.SmileyRating;
+import com.mrtecks.amrdukan.addressPOJO.addressBean;
+import com.mrtecks.amrdukan.checkoutPOJO.checkoutBean;
 
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -226,6 +240,93 @@ public class MainActivity extends AppCompatActivity {
 
 
         navigation.setSelectedItemId(R.id.action_home);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Bean b = (Bean) getApplicationContext();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(b.baseurl)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+        Log.d("asdasd", SharePreferenceUtils.getInstance().getString("userId"));
+
+        Call<checkoutBean> call = cr.checkRating(SharePreferenceUtils.getInstance().getString("userId"));
+
+        call.enqueue(new Callback<checkoutBean>() {
+            @Override
+            public void onResponse(Call<checkoutBean> call, final Response<checkoutBean> response) {
+
+                if (response.body().getStatus().equals("1")) {
+                    final Dialog dialog = new Dialog(MainActivity.this, R.style.MyDialogTheme);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setCancelable(false);
+                    dialog.setContentView(R.layout.rating_dialog);
+                    dialog.show();
+
+                    TextView title = dialog.findViewById(R.id.textView143);
+                    final SmileyRating rating = dialog.findViewById(R.id.textView142);
+                    Button submit = dialog.findViewById(R.id.button18);
+                    title.setText("Please rate your previous Order");
+
+                    rating.setRating(5);
+
+                    submit.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            SmileyRating.Type smiley = rating.getSelectedSmiley();
+
+                            // You can get the user rating too
+                            // rating will between 1 to 5, but -1 is none selected
+                            int rating2 = smiley.getRating();
+
+                            Call<checkoutBean> call2 = cr.submitRating(
+                                    response.body().getMessage(),
+                                    String.valueOf(rating2)
+                            );
+
+                            call2.enqueue(new Callback<checkoutBean>() {
+                                @Override
+                                public void onResponse(Call<checkoutBean> call, Response<checkoutBean> response) {
+
+                                    if (response.body().getStatus().equals("1")) {
+                                        dialog.dismiss();
+                                    }
+
+                                    Toast.makeText(MainActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<checkoutBean> call, Throwable t) {
+
+                                }
+                            });
+
+                        }
+                    });
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<checkoutBean> call, Throwable t) {
+
+            }
+        });
 
     }
 }

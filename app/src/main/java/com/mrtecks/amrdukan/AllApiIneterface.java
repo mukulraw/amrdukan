@@ -324,4 +324,17 @@ public interface AllApiIneterface {
             @Part("order_id") String order_id
     );
 
+    @Multipart
+    @POST("amrdukan/api/checkRating.php")
+    Call<checkoutBean> checkRating(
+            @Part("user_id") String user_id
+    );
+
+    @Multipart
+    @POST("amrdukan/api/submitRating.php")
+    Call<checkoutBean> submitRating(
+            @Part("id") String id,
+            @Part("rating") String rating
+    );
+
 }

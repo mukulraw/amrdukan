@@ -63,7 +63,6 @@ public class Category3 extends AppCompatActivity {
     class PagerAdapter extends FragmentStatePagerAdapter {
 
         int[] banners = new int[]{
-                R.drawable.banner1,
                 R.drawable.banner2,
                 R.drawable.banner3,
                 R.drawable.banner4

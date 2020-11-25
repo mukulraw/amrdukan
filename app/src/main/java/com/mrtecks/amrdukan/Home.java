@@ -142,7 +142,7 @@ public class Home extends Fragment {
 
         categoryAdapter = new CategoryAdapter(mainActivity, list);
         bestAdapter = new BestAdapter(mainActivity, blist);
-        manager = new GridLayoutManager(mainActivity, 3);
+        manager = new GridLayoutManager(mainActivity, 2);
         manager2 = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
 
         offerAdapter = new OfferAdapter(mainActivity, bannersList);

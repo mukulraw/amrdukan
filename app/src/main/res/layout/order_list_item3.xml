@@ -66,9 +66,12 @@
 
         <TextView
             android:id="@+id/textView32"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:text="name"
+            app:layout_constraintEnd_toStartOf="@+id/button11"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/textView30"
             app:layout_constraintTop_toTopOf="@+id/textView31" />
 
@@ -118,7 +121,7 @@
             android:text="Payment Mode"
             android:textColor="#000000"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView31" />
+            app:layout_constraintTop_toBottomOf="@+id/textView32" />
 
         <TextView
             android:id="@+id/textView40"
@@ -173,20 +176,20 @@
             android:id="@+id/button11"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:background="@drawable/white_back_stroke"
             android:drawableStart="@drawable/ic_road"
             android:drawablePadding="10dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            android:visibility="gone"
-            android:paddingStart="20dp"
+            android:paddingStart="10dp"
             android:paddingTop="4dp"
-            android:paddingEnd="20dp"
+            android:paddingEnd="10dp"
             android:paddingBottom="4dp"
-            android:text="Track Order"
-            app:layout_constraintBottom_toBottomOf="@+id/textView33"
+            android:text="Track\nOrder"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView33" />
+            app:layout_constraintTop_toBottomOf="@+id/textView35" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,6 +47,7 @@ public class OrderDetails2 extends AppCompatActivity {
     CategoryAdapter adapter;
     String oid, status;
     FloatingActionButton track;
+    WebView web_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +63,7 @@ public class OrderDetails2 extends AppCompatActivity {
         grid = findViewById(R.id.grid);
         progress = findViewById(R.id.progressBar2);
         track = findViewById(R.id.floatingActionButton);
+        web_view = findViewById(R.id.web);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -86,6 +90,18 @@ public class OrderDetails2 extends AppCompatActivity {
         } else {
             track.setVisibility(View.GONE);
         }
+
+        web_view.loadUrl("https://mrtecks.com/amrdukan/print2.php?id=" + oid);
+        web_view.getSettings().setJavaScriptEnabled(true);
+        web_view.getSettings().setLoadWithOverviewMode(true);
+        web_view.getSettings().setUseWideViewPort(true);
+
+        web_view.getSettings().setSupportZoom(true);
+        web_view.getSettings().setBuiltInZoomControls(true);
+        web_view.getSettings().setDisplayZoomControls(false);
+
+        web_view.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        web_view.setScrollbarFadingEnabled(false);
 
         track.setOnClickListener(new View.OnClickListener() {
             @Override

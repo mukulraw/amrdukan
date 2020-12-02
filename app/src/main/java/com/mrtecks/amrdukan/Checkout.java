@@ -1,13 +1,22 @@
 package com.mrtecks.amrdukan;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +33,18 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.mrtecks.amrdukan.addressPOJO.Datum;
 import com.mrtecks.amrdukan.addressPOJO.addressBean;
 import com.mrtecks.amrdukan.checkPromoPOJO.checkPromoBean;
@@ -83,10 +104,21 @@ public class Checkout extends AppCompatActivity implements DatePickerDialog.OnDa
 
     TextView promotext, getlocation;
 
+    private FusedLocationProviderClient fusedLocationClient;
+
+    String lat = "", lng = "";
+
+    LocationSettingsRequest.Builder builder;
+    LocationRequest locationRequest;
+
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         list = new ArrayList<>();
         ts = new ArrayList<>();
@@ -162,7 +194,8 @@ public class Checkout extends AppCompatActivity implements DatePickerDialog.OnDa
             @Override
             public void onClick(View v) {
 
-                address.setText(SharePreferenceUtils.getInstance().getString("deliveryLocation"));
+                createLocationRequest();
+                //address.setText(SharePreferenceUtils.getInstance().getString("deliveryLocation"));
 
             }
         });
@@ -777,6 +810,133 @@ public class Checkout extends AppCompatActivity implements DatePickerDialog.OnDa
             slot.setAdapter(adapter);
 
         }
+    }
+
+    protected void createLocationRequest() {
+
+        progress.setVisibility(View.VISIBLE);
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+        SettingsClient client = LocationServices.getSettingsClient(Checkout.this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+
+        task.addOnSuccessListener(Checkout.this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                getLocation();
+            }
+        });
+
+        task.addOnFailureListener(Checkout.this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e instanceof ResolvableApiException) {
+                    // Location settings are not satisfied, but mainActivity can be fixed
+                    // by showing the user a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult().
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(Checkout.this,
+                                REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        // Ignore the error.
+                    }
+                }
+            }
+        });
+
+    }
+
+
+    void getLocation() {
+        if (ActivityCompat.checkSelfPermission(Checkout.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Checkout.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        LocationCallback mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        //TODO: UI updates.
+                        lat = String.valueOf(location.getLatitude());
+                        lng = String.valueOf(location.getLongitude());
+
+                        SharePreferenceUtils.getInstance().saveString("lat", lat);
+                        SharePreferenceUtils.getInstance().saveString("lng", lng);
+
+                        Log.d("lat123", lat);
+                        Log.d("lat123", lng);
+
+                        LocationServices.getFusedLocationProviderClient(Checkout.this).removeLocationUpdates(this);
+
+                        Geocoder geocoder = new Geocoder(Checkout.this, Locale.getDefault());
+                        List<android.location.Address> addresses = null;
+                        try {
+                            addresses = geocoder.getFromLocation(Double.parseDouble(SharePreferenceUtils.getInstance().getString("lat")), Double.parseDouble(SharePreferenceUtils.getInstance().getString("lng")), 1);
+                            //Toast.makeText(Checkout2.this, "Your location: - " + addresses.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
+                            SharePreferenceUtils.getInstance().saveString("deliveryLocation", addresses.get(0).getAddressLine(0));
+                            //SharePreferenceUtils.getInstance().saveString("getcity", addresses.get(0).getLocality());
+                            //SharePreferenceUtils.getInstance().saveString("getlocality", addresses.get(0).getSubLocality());
+                            //SharePreferenceUtils.getInstance().saveString("getpincode", addresses.get(0).getPostalCode());
+
+                            address.setText(addresses.get(0).getAddressLine(0));
+
+                            progress.setVisibility(View.GONE);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }
+        };
+
+        LocationServices.getFusedLocationProviderClient(Checkout.this).requestLocationUpdates(locationRequest, mLocationCallback, null);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            // Check for the integer request code originally supplied to startResolutionForResult().
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case RESULT_OK:
+                        Log.i("TAG", "User agreed to make required location settings changes.");
+                        getLocation();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(Checkout.this, "Location is required for mainActivity app", Toast.LENGTH_LONG).show();
+                        finishAffinity();
+                        break;
+                }
+                break;
+        }
+
+
     }
 
 }

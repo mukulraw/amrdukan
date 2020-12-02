@@ -70,7 +70,7 @@ public class Checkout2 extends AppCompatActivity {
 
     private static final String TAG = "Checkout";
     Toolbar toolbar;
-    EditText name, address, area, city, pin, promo;
+    EditText name, address, area, city, pin, promo, phone;
     Button proceed, apply;
     ProgressBar progress;
     String amm, gtotal;
@@ -128,6 +128,7 @@ public class Checkout2 extends AppCompatActivity {
         cid = getIntent().getStringExtra("cid");
 
         toolbar = findViewById(R.id.toolbar4);
+        phone = findViewById(R.id.editTextPhone);
         promotext = findViewById(R.id.textView79);
         name = findViewById(R.id.editText2);
         address = findViewById(R.id.editText3);
@@ -182,6 +183,7 @@ public class Checkout2 extends AppCompatActivity {
         gtotal = String.valueOf(gt);
 
 
+        phone.setText(SharePreferenceUtils.getInstance().getString("phone"));
         address.setText(SharePreferenceUtils.getInstance().getString("deliveryLocation"));
         area.setText(SharePreferenceUtils.getInstance().getString("getlocality"));
         city.setText(SharePreferenceUtils.getInstance().getString("getcity"));
@@ -376,110 +378,114 @@ public class Checkout2 extends AppCompatActivity {
                 String ar = area.getText().toString();
                 String c = city.getText().toString();
                 String p = pin.getText().toString();
+                String ph = phone.getText().toString();
 
-                if (n.length() > 0) {
+                if (ph.length() == 10)
+                {
+                    if (n.length() > 0) {
 
-                    if (a.length() > 0) {
+                        if (a.length() > 0) {
 
-                        int iidd = group.getCheckedRadioButtonId();
+                            int iidd = group.getCheckedRadioButtonId();
 
-                        if (iidd > -1) {
+                            if (iidd > -1) {
 
-                            RadioButton cb = group.findViewById(iidd);
+                                RadioButton cb = group.findViewById(iidd);
 
-                            paymode = cb.getText().toString();
+                                paymode = cb.getText().toString();
 
 
-                            oid = String.valueOf(System.currentTimeMillis());
+                                oid = String.valueOf(System.currentTimeMillis());
 
-                            if (paymode.equals("Cash on Delivery")) {
-                                progress.setVisibility(View.VISIBLE);
+                                if (paymode.equals("Cash on Delivery")) {
+                                    progress.setVisibility(View.VISIBLE);
 
-                                Bean b = (Bean) getApplicationContext();
+                                    Bean b = (Bean) getApplicationContext();
 
-                                //String adr = a + ", " + ar + ", " + c + ", " + p;
-                                String adr = a;
+                                    //String adr = a + ", " + ar + ", " + c + ", " + p;
+                                    String adr = a;
 
-                                Log.d("addd", adr);
+                                    Log.d("addd", adr);
 
-                                Retrofit retrofit = new Retrofit.Builder()
-                                        .baseUrl(b.baseurl)
-                                        .addConverterFactory(ScalarsConverterFactory.create())
-                                        .addConverterFactory(GsonConverterFactory.create())
-                                        .build();
+                                    Retrofit retrofit = new Retrofit.Builder()
+                                            .baseUrl(b.baseurl)
+                                            .addConverterFactory(ScalarsConverterFactory.create())
+                                            .addConverterFactory(GsonConverterFactory.create())
+                                            .build();
 
-                                AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+                                    AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
-                                Call<checkoutBean> call = cr.buyVouchers2(
-                                        SharePreferenceUtils.getInstance().getString("userId"),
-                                        SharePreferenceUtils.getInstance().getString("lat"),
-                                        SharePreferenceUtils.getInstance().getString("lng"),
-                                        gtotal,
-                                        oid,
-                                        n,
-                                        adr,
-                                        paymode,
-                                        tslot,
-                                        dd,
-                                        pid,
-                                        a,
-                                        ar,
-                                        c,
-                                        p,
-                                        isnew,
-                                        cid
-                                );
-                                call.enqueue(new Callback<checkoutBean>() {
-                                    @Override
-                                    public void onResponse(Call<checkoutBean> call, Response<checkoutBean> response) {
+                                    Call<checkoutBean> call = cr.buyVouchers2(
+                                            SharePreferenceUtils.getInstance().getString("userId"),
+                                            SharePreferenceUtils.getInstance().getString("lat"),
+                                            SharePreferenceUtils.getInstance().getString("lng"),
+                                            gtotal,
+                                            oid,
+                                            ph,
+                                            n,
+                                            adr,
+                                            paymode,
+                                            tslot,
+                                            dd,
+                                            pid,
+                                            a,
+                                            ar,
+                                            c,
+                                            p,
+                                            isnew,
+                                            cid
+                                    );
+                                    call.enqueue(new Callback<checkoutBean>() {
+                                        @Override
+                                        public void onResponse(Call<checkoutBean> call, Response<checkoutBean> response) {
 
-                                        Toast.makeText(Checkout2.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(Checkout2.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
-                                        progress.setVisibility(View.GONE);
+                                            progress.setVisibility(View.GONE);
 
-                                        final Dialog dialog = new Dialog(Checkout2.this, R.style.DialogCustomTheme);
-                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                        dialog.setCancelable(true);
-                                        dialog.setContentView(R.layout.success_popup);
-                                        dialog.show();
+                                            final Dialog dialog = new Dialog(Checkout2.this, R.style.DialogCustomTheme);
+                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                            dialog.setCancelable(true);
+                                            dialog.setContentView(R.layout.success_popup);
+                                            dialog.show();
 
-                                        TextView oi = dialog.findViewById(R.id.textView57);
-                                        TextView au = dialog.findViewById(R.id.textView58);
-                                        Button ok = dialog.findViewById(R.id.button10);
+                                            TextView oi = dialog.findViewById(R.id.textView57);
+                                            TextView au = dialog.findViewById(R.id.textView58);
+                                            Button ok = dialog.findViewById(R.id.button10);
 
-                                        oi.setText(oid);
-                                        au.setText("₹ " + gtotal);
+                                            oi.setText(oid);
+                                            au.setText("₹ " + gtotal);
 
-                                        ok.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
+                                            ok.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
 
-                                                dialog.dismiss();
-                                                Intent intent = new Intent(Checkout2.this, MainActivity.class);
-                                                startActivity(intent);
-                                                finishAffinity();
+                                                    dialog.dismiss();
+                                                    Intent intent = new Intent(Checkout2.this, MainActivity.class);
+                                                    startActivity(intent);
+                                                    finishAffinity();
 
-                                            }
-                                        });
+                                                }
+                                            });
 
-                                        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                            @Override
-                                            public void onCancel(DialogInterface dialog) {
+                                            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                                @Override
+                                                public void onCancel(DialogInterface dialog) {
 
-                                                dialog.dismiss();
-                                                finish();
+                                                    dialog.dismiss();
+                                                    finish();
 
-                                            }
-                                        });
+                                                }
+                                            });
 
-                                    }
+                                        }
 
-                                    @Override
-                                    public void onFailure(Call<checkoutBean> call, Throwable t) {
-                                        progress.setVisibility(View.GONE);
-                                    }
-                                });
-                            } else {
+                                        @Override
+                                        public void onFailure(Call<checkoutBean> call, Throwable t) {
+                                            progress.setVisibility(View.GONE);
+                                        }
+                                    });
+                                } else {
 
 
                                                     /*progress.setVisibility(View.VISIBLE);
@@ -554,20 +560,27 @@ public class Checkout2 extends AppCompatActivity {
                                                     startActivityForResult(intent, 12);*/
 
 
+                                }
+
+
+                            } else {
+                                Toast.makeText(Checkout2.this, "Please select a Payment Mode", Toast.LENGTH_SHORT).show();
                             }
 
-
                         } else {
-                            Toast.makeText(Checkout2.this, "Please select a Payment Mode", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Checkout2.this, "Please enter a valid Address", Toast.LENGTH_SHORT).show();
                         }
 
                     } else {
-                        Toast.makeText(Checkout2.this, "Please enter a valid Address", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Checkout2.this, "Please enter a valid Name", Toast.LENGTH_SHORT).show();
                     }
-
-                } else {
-                    Toast.makeText(Checkout2.this, "Please enter a valid Name", Toast.LENGTH_SHORT).show();
                 }
+                else
+                {
+                    Toast.makeText(Checkout2.this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
+                }
+
+
 
             }
         });

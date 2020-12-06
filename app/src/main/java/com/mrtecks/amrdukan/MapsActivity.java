@@ -1,5 +1,6 @@
 package com.mrtecks.amrdukan;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -34,6 +35,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Observable;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -51,6 +55,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
 
     String order;
+    Timer t;
 
     private static final int COLOR_BLACK_ARGB = 0xff000000;
     private static final int POLYLINE_STROKE_WIDTH_PX = 12;
@@ -59,6 +64,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LatLng mDestination;
     private Polyline mPolyline;
     ArrayList<LatLng> mMarkerPoints;
+    PolylineOptions lineOptions;
+    Marker driver, home;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +95,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
 
         Bean b = (Bean) getApplicationContext();
 
@@ -110,69 +117,81 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+        final AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
-        Call<trackBean> call = cr.getLogs(order);
+        t = new Timer();
+//Set the schedule function and rate
+        t.scheduleAtFixedRate(new TimerTask() {
+                                  @Override
+                                  public void run() {
+                                      Call<trackBean> call = cr.getLogs(order);
 
-        call.enqueue(new Callback<trackBean>() {
-            @Override
-            public void onResponse(Call<trackBean> call, Response<trackBean> response) {
+                                      call.enqueue(new Callback<trackBean>() {
+                                          @Override
+                                          public void onResponse(Call<trackBean> call, Response<trackBean> response) {
 
-                mOrigin = new LatLng(Double.parseDouble(response.body().getMylat()), Double.parseDouble(response.body().getMylng()));
-                mDestination = new LatLng(Double.parseDouble(response.body().getDriverlat()), Double.parseDouble(response.body().getDriverlng()));
+                                              mOrigin = new LatLng(Double.parseDouble(response.body().getMylat()), Double.parseDouble(response.body().getMylng()));
+                                              mDestination = new LatLng(Double.parseDouble(response.body().getDriverlat()), Double.parseDouble(response.body().getDriverlng()));
 
-                mMarkerPoints.clear();
-                mMap.clear();
+                                              mMarkerPoints.clear();
+                                              //mMap.clear();
 
-/*
-                Polyline polyline = googleMap.addPolyline(new PolylineOptions()
-                        .clickable(true).add(latLng1).add(latLng2));
+                                              if (driver == null) {
+                                                  driver = mMap.addMarker(
+                                                          new MarkerOptions()
+                                                                  .position(mDestination)
+                                                                  .title("Melbourne")
+                                                                  .snippet("Population: 4,137,400")
+                                                                  .icon(BitmapDescriptorFactory.fromResource(R.drawable.delivery)));
+                                              } else {
+                                                  driver.setPosition(mDestination);
+                                              }
+
+                                              if (home == null) {
+                                                  home = mMap.addMarker(
+                                                          new MarkerOptions()
+                                                                  .position(mOrigin)
+                                                                  .title("Melbourne")
+                                                                  .snippet("Population: 4,137,400")
+                                                                  .icon(BitmapDescriptorFactory.fromResource(R.drawable.home)));
+
+                                              } else {
+                                                  home.setPosition(mOrigin);
+                                              }
 
 
-
-                polyline.setEndCap(new RoundCap());
-                polyline.setColor(COLOR_BLACK_ARGB);
-                polyline.setJointType(JointType.ROUND);
-*/
-
-                Marker melbourne = mMap.addMarker(
-                        new MarkerOptions()
-                                .position(mDestination)
-                                .title("Melbourne")
-                                .snippet("Population: 4,137,400")
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.delivery)));
-
-                Marker melbourne2 = mMap.addMarker(
-                        new MarkerOptions()
-                                .position(mOrigin)
-                                .title("Melbourne")
-                                .snippet("Population: 4,137,400")
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.home)));
-
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                              LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
 //the include method will calculate the min and max bound.
-                builder.include(mOrigin);
-                builder.include(mDestination);
-                LatLngBounds bounds = builder.build();
+                                              builder.include(mOrigin);
+                                              builder.include(mDestination);
+                                              LatLngBounds bounds = builder.build();
 
-                int width = getResources().getDisplayMetrics().widthPixels;
-                int height = getResources().getDisplayMetrics().heightPixels;
-                int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
+                                              int width = getResources().getDisplayMetrics().widthPixels;
+                                              int height = getResources().getDisplayMetrics().heightPixels;
+                                              int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
 
-                CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+                                              CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
 
-                mMap.animateCamera(cu);
+                                              mMap.animateCamera(cu);
 
-                drawRoute();
+                                              drawRoute();
 
-            }
 
-            @Override
-            public void onFailure(Call<trackBean> call, Throwable t) {
+                                          }
 
-            }
-        });
+                                          @Override
+                                          public void onFailure(Call<trackBean> call, Throwable t) {
+
+                                          }
+                                      });
+                                  }
+
+                              },
+//Set how long before to start calling the TimerTask (in milliseconds)
+                0,
+//Set the amount of time between each execution (in milliseconds)
+                1000);
 
 
     }
@@ -317,43 +336,69 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
             ArrayList<LatLng> points = null;
-            PolylineOptions lineOptions = null;
 
-            // Traversing through all the routes
-            for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList<LatLng>();
-                lineOptions = new PolylineOptions();
+            if (lineOptions == null) {
+                Log.d("lineoptions", "null");
+                // Traversing through all the routes
+                for (int i = 0; i < result.size(); i++) {
+                    points = new ArrayList<LatLng>();
+                    lineOptions = new PolylineOptions();
 
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
+                    // Fetching i-th route
+                    List<HashMap<String, String>> path = result.get(i);
 
-                // Fetching all the points in i-th route
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
+                    // Fetching all the points in i-th route
+                    for (int j = 0; j < path.size(); j++) {
+                        HashMap<String, String> point = path.get(j);
 
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
+                        double lat = Double.parseDouble(point.get("lat"));
+                        double lng = Double.parseDouble(point.get("lng"));
+                        LatLng position = new LatLng(lat, lng);
 
-                    points.add(position);
+                        points.add(position);
+                    }
+
+                    // Adding all the points in the route to LineOptions
+                    lineOptions.addAll(points);
+                    lineOptions.width(8);
+                    lineOptions.color(Color.BLACK);
                 }
 
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(8);
-                lineOptions.color(Color.BLACK);
+                // Drawing polyline in the Google Map for the i-th route
+                if (lineOptions != null) {
+                    if (mPolyline != null) {
+                        mPolyline.remove();
+                    }
+                    mPolyline = mMap.addPolyline(lineOptions);
+
+                } else
+                    Toast.makeText(getApplicationContext(), "No route is found", Toast.LENGTH_LONG).show();
+
+            } else {
+
+                Log.d("lineoptions", "points");
+                // Traversing through all the routes
+                for (int i = 0; i < result.size(); i++) {
+                    points = new ArrayList<LatLng>();
+                    List<HashMap<String, String>> path = result.get(i);
+                    for (int j = 0; j < path.size(); j++) {
+                        HashMap<String, String> point = path.get(j);
+                        double lat = Double.parseDouble(point.get("lat"));
+                        double lng = Double.parseDouble(point.get("lng"));
+                        LatLng position = new LatLng(lat, lng);
+                        points.add(position);
+                    }
+                    mPolyline.setPoints(points);
+                }
             }
 
-            // Drawing polyline in the Google Map for the i-th route
-            if (lineOptions != null) {
-                if (mPolyline != null) {
-                    mPolyline.remove();
-                }
-                mPolyline = mMap.addPolyline(lineOptions);
 
-            } else
-                Toast.makeText(getApplicationContext(), "No route is found", Toast.LENGTH_LONG).show();
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        t.cancel();
+    }
 }

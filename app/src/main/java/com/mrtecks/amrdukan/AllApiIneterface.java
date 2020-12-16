@@ -62,7 +62,9 @@ public interface AllApiIneterface {
     @Multipart
     @POST("amrdukan/api/login.php")
     Call<loginBean> login(
-            @Part("phone") String phone,
+            @Part("email") String email,
+            @Part("password") String password,
+            @Part("name") String name,
             @Part("token") String token
     );
 

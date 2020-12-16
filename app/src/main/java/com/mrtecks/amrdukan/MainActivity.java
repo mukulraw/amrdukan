@@ -21,6 +21,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hsalf.smileyrating.SmileyRating;
 import com.mrtecks.amrdukan.addressPOJO.addressBean;
@@ -46,10 +51,18 @@ public class MainActivity extends AppCompatActivity {
 
     TextView address, orders, cart1, contact, logout, name;
 
+    GoogleSignInClient mGoogleSignInClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         toolbar = findViewById(R.id.toolbar);
         cart = findViewById(R.id.imageView2);
@@ -82,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        name.setText(SharePreferenceUtils.getInstance().getString("phone"));
+        name.setText(SharePreferenceUtils.getInstance().getString("email"));
 
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -195,11 +208,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                SharePreferenceUtils.getInstance().deletePref();
+                mGoogleSignInClient.signOut()
+                        .addOnCompleteListener(MainActivity.this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                SharePreferenceUtils.getInstance().deletePref();
 
-                Intent intent = new Intent(MainActivity.this, Splash.class);
-                startActivity(intent);
-                finishAffinity();
+                                Intent intent = new Intent(MainActivity.this, Splash.class);
+                                startActivity(intent);
+                                finishAffinity();
+                            }
+                        });
 
             }
         });

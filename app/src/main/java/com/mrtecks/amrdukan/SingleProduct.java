@@ -284,6 +284,7 @@ public class SingleProduct extends AppCompatActivity {
                         Log.d("pid", pid);
                         Log.d("quantity", String.valueOf(stepperTouch.getCount()));
 
+                        String versionName = BuildConfig.VERSION_NAME;
 
                         Call<singleProductBean> call = cr.addFoodCart(
                                 SharePreferenceUtils.getInstance().getString("userId"),
@@ -292,7 +293,8 @@ public class SingleProduct extends AppCompatActivity {
                                 nv1,
                                 cid,
                                 aons,
-                                req
+                                req,
+                                versionName
                         );
 
                         call.enqueue(new Callback<singleProductBean>() {

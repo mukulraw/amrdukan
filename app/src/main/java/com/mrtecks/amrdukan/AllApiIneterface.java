@@ -118,7 +118,8 @@ public interface AllApiIneterface {
             @Part("unit_price") String unit_price,
             @Part("reataurant") String reataurant,
             @Part("addon") String addon,
-            @Part("request") String request
+            @Part("request") String request,
+            @Part("version") String version
     );
 
     @Multipart

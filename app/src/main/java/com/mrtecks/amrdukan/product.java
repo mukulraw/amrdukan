@@ -290,7 +290,7 @@ public class product extends Fragment {
                             Log.d("userid", SharePreferenceUtils.getInstance().getString("userid"));
                             Log.d("pid", item.getId());
                             Log.d("quantity", String.valueOf(stepperTouch.getCount()));
-
+                            String versionName = BuildConfig.VERSION_NAME;
 
                             Call<singleProductBean> call = cr.addFoodCart(
                                     SharePreferenceUtils.getInstance().getString("userId"),
@@ -299,7 +299,8 @@ public class product extends Fragment {
                                     item.getDiscount(),
                                     cid,
                                     aons,
-                                    req
+                                    req,
+                                    versionName
                             );
 
                             call.enqueue(new Callback<singleProductBean>() {

@@ -18,7 +18,7 @@
         <item name="android:colorBackgroundCacheHint">@null</item>
     </style>
 
-    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="MyDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <!--item RadioButton or CheckBox color-->
         <item name="colorControlNormal">#000000</item>
         <item name="colorControlActivated">@color/colorPrimary</item>

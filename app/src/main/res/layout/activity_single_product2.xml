@@ -129,7 +129,6 @@
                                     android:layout_margin="8dp"
                                     android:text="ADD TO CART"
                                     android:id="@+id/add"
-                                    android:background="@drawable/accent_back_round"
                                     android:textColor="#ffffff"
                                     android:minWidth="0dp"
                                     android:minHeight="0dp"

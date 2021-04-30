@@ -62,7 +62,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
-                android:background="@drawable/green_back_round2"
                 android:minHeight="0dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"

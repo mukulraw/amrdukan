@@ -114,6 +114,8 @@
             android:minHeight="0dp"
             android:padding="5dp"
             android:paddingStart="20dp"
+            app:backgroundTint="#00000000"
+            app:backgroundTintMode="add"
             android:paddingTop="8dp"
             android:paddingEnd="16dp"
             android:paddingBottom="8dp"

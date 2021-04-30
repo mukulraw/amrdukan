@@ -36,9 +36,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         SharePreferenceUtils.getInstance().saveString("token" , s);
 
         Log.d("toekn" , s);
-
-
-
         super.onNewToken(s);
     }
 

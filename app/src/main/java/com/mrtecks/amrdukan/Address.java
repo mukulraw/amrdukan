@@ -7,16 +7,19 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mrtecks.amrdukan.addressPOJO.Datum;
 import com.mrtecks.amrdukan.addressPOJO.addressBean;
 
@@ -44,6 +47,8 @@ public class Address extends AppCompatActivity {
     GridLayoutManager manager;
 
     RecyclerView grid;
+    FloatingActionButton add;
+    ImageView nodata;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,9 @@ public class Address extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar3);
         progress = findViewById(R.id.progressBar3);
         grid = findViewById(R.id.grid);
+        add = findViewById(R.id.floatingActionButton);
+        nodata = findViewById(R.id.imageView5);
+
         setSupportActionBar(toolbar);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
@@ -78,6 +86,18 @@ public class Address extends AppCompatActivity {
 
         grid.setAdapter(adapter);
         grid.setLayoutManager(manager);
+
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(Address.this, AddAddress.class);
+                startActivity(intent);
+
+            }
+        });
+
 
 
     }
@@ -111,14 +131,13 @@ public class Address extends AppCompatActivity {
             public void onResponse(Call<addressBean> call, Response<addressBean> response) {
 
                 if (response.body().getData().size() > 0) {
-
-
+                    nodata.setVisibility(View.GONE);
                     adapter.setgrid(response.body().getData());
-
                 } else {
+                    nodata.setVisibility(View.VISIBLE);
                     adapter.setgrid(response.body().getData());
                     Toast.makeText(Address.this, "No address found", Toast.LENGTH_SHORT).show();
-                    finish();
+                    //finish();
                 }
 
                 progress.setVisibility(View.GONE);
@@ -221,6 +240,17 @@ public class Address extends AppCompatActivity {
                 }
             });
 
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, EditAddress.class);
+                    intent.putExtra("id", item.getId());
+                    intent.putExtra("name", item.getName());
+                    intent.putExtra("house", item.getHouse());
+                    intent.putExtra("pin", item.getPin());
+                    startActivity(intent);
+                }
+            });
 
         }
 

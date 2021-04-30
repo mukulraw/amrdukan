@@ -25,9 +25,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hsalf.smileyrating.SmileyRating;
 import com.mrtecks.amrdukan.checkoutPOJO.checkoutBean;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -46,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView cart;
     TextView count;
 
-    TextView address, orders, cart1, contact, logout, name;
+    TextView address, orders, cart1, contact, about, share, terms, logout, name;
 
 
     @Override
@@ -62,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
         orders = findViewById(R.id.textView20);
         cart1 = findViewById(R.id.textView21);
         contact = findViewById(R.id.textView22);
+        about = findViewById(R.id.textView23);
+        share = findViewById(R.id.textView24);
+        terms = findViewById(R.id.textView25);
         logout = findViewById(R.id.textView26);
         name = findViewById(R.id.textView17);
 
@@ -198,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                //FirebaseMessaging.getInstance().deleteToken();
                 SharePreferenceUtils.getInstance().deletePref();
 
                 Intent intent = new Intent(MainActivity.this, Splash.class);

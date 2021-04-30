@@ -2,15 +2,20 @@ package com.mrtecks.amrdukan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.mrtecks.amrdukan.loginPOJO.Data;
 import com.mrtecks.amrdukan.loginPOJO.loginBean;
 
@@ -44,6 +49,20 @@ public class Login extends AppCompatActivity {
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
         progress = findViewById(R.id.progressBar);
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("Token Error", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        String token = task.getResult();
+                        SharePreferenceUtils.getInstance().saveString("token" , token);
+                    }
+                });
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +102,8 @@ public class Login extends AppCompatActivity {
                                 .build();
 
                         AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+                        Log.d("tokena", SharePreferenceUtils.getInstance().getString("token"));
 
                         Call<loginBean> call = cr.login(em, pa, SharePreferenceUtils.getInstance().getString("token"));
 

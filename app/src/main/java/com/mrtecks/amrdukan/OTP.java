@@ -39,7 +39,7 @@ public class OTP extends AppCompatActivity {
         progress = findViewById(R.id.progressBar);
 
 
-        login.setOnClickListener(new View.OnClickListener() {
+        /*login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -106,7 +106,7 @@ public class OTP extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
 
     }
 }

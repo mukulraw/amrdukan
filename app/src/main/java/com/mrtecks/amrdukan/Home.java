@@ -36,6 +36,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -82,7 +83,7 @@ public class Home extends Fragment {
 
     RecyclerView categories;
     RecyclerView best;
-    GridLayoutManager manager;
+    StaggeredGridLayoutManager manager;
     LinearLayoutManager manager2;
     ViewPager banners;
     CircleIndicator indicator;
@@ -98,7 +99,7 @@ public class Home extends Fragment {
 
     static MainActivity mainActivity;
 
-    EditText search;
+    TextView search;
 
     CategoryAdapter categoryAdapter;
     BestAdapter bestAdapter;
@@ -138,11 +139,12 @@ public class Home extends Fragment {
         progress = view.findViewById(R.id.progressBar2);
         banner1 = view.findViewById(R.id.imageView3);
         obanners = view.findViewById(R.id.imageView4);
+        search = view.findViewById(R.id.textView5);
 
 
         categoryAdapter = new CategoryAdapter(mainActivity, list);
         bestAdapter = new BestAdapter(mainActivity, blist);
-        manager = new GridLayoutManager(mainActivity, 2);
+        manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         manager2 = new LinearLayoutManager(mainActivity, LinearLayoutManager.HORIZONTAL, false);
 
         offerAdapter = new OfferAdapter(mainActivity, bannersList);
@@ -150,12 +152,12 @@ public class Home extends Fragment {
         obanners.setAdapter(offerAdapter);
         obanners.setLayoutManager(manager22);
 
-        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        /*manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 return categoryAdapter.getSpans(position);
             }
-        });
+        });*/
 
         categories.setAdapter(categoryAdapter);
         categories.setLayoutManager(manager);
@@ -163,7 +165,7 @@ public class Home extends Fragment {
         best.setAdapter(bestAdapter);
         best.setLayoutManager(manager2);
 
-        /*search.setOnClickListener(new View.OnClickListener() {
+        search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -172,16 +174,12 @@ public class Home extends Fragment {
                 FragmentTransaction ft4 = fm4.beginTransaction();
                 Search frag14 = new Search();
                 ft4.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    *//*Bundle b = new Bundle();
-                    b.putString("id", item.getId());
-                    b.putString("title", item.getName());
-                    frag14.setArguments(b);*//*
                 ft4.replace(R.id.replace, frag14);
                 //ft4.addToBackStack(null);
                 ft4.commit();
 
             }
-        });*/
+        });
 
         createLocationRequest();
 
@@ -341,7 +339,7 @@ public class Home extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.best_list_model, parent, false);
+            View view = inflater.inflate(R.layout.best_list_model3, parent, false);
             return new ViewHolder(view);
         }
 
@@ -354,10 +352,39 @@ public class Home extends Fragment {
             ImageLoader loader = ImageLoader.getInstance();
             loader.displayImage(item.getImage(), holder.image, options);
 
+            float dis = Float.parseFloat(item.getDiscount());
+
+            final String nv1;
+
+            holder.stock.setText(item.getStock());
+
+            if (dis > 0) {
+
+                float pri = Float.parseFloat(item.getPrice());
+                float dv = pri - dis;
+                float dd = (dv / pri) * 100;
+
+                nv1 = String.valueOf(dis);
+
+                holder.discount.setVisibility(View.VISIBLE);
+                holder.disc.setVisibility(View.VISIBLE);
+                holder.discount.setText(Math.round(dd) + "% OFF");
+                //holder.price.setText(Html.fromHtml("<font color=\"#000000\"><b>\u20B9 " + String.valueOf(nv) + " </b></font><strike>\u20B9 " + item.getPrice() + "</strike>"));
+                holder.price.setText(Html.fromHtml("<font><b>\u20B9 " + String.valueOf(nv1) + " </b></font>"));
+                holder.disc.setText(Html.fromHtml("<strike>\u20B9 " + item.getPrice() + "</strike>"));
+            } else {
+
+                nv1 = item.getPrice();
+                holder.discount.setVisibility(View.GONE);
+                holder.disc.setVisibility(View.GONE);
+                holder.price.setText(Html.fromHtml("<font><b>\u20B9 " + String.valueOf(item.getPrice()) + " </b></font>"));
+            }
+/*
 
             holder.selling.setText(Html.fromHtml("<font color=\"#000000\"><b>\u20B9 " + String.valueOf(item.getPrice()) + " </b></font>"));
 
             holder.mrp.setText(Html.fromHtml("<strike>\u20B9 " + item.getDiscount() + "</strike>"));
+*/
 
 
             holder.title.setText(item.getName());
@@ -477,16 +504,18 @@ public class Home extends Fragment {
         class ViewHolder extends RecyclerView.ViewHolder {
 
             ImageView image;
-            TextView title, selling, mrp;
+            TextView price, title, discount, stock, disc;
             Button add;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                image = itemView.findViewById(R.id.imageView5);
-                title = itemView.findViewById(R.id.textView2);
-                selling = itemView.findViewById(R.id.textView4);
-                mrp = itemView.findViewById(R.id.textView6);
-                add = itemView.findViewById(R.id.button);
+                image = itemView.findViewById(R.id.imageView4);
+                price = itemView.findViewById(R.id.textView11);
+                title = itemView.findViewById(R.id.textView12);
+                discount = itemView.findViewById(R.id.textView10);
+                add = itemView.findViewById(R.id.button5);
+                stock = itemView.findViewById(R.id.textView63);
+                disc = itemView.findViewById(R.id.textView67);
             }
         }
     }

@@ -8,6 +8,7 @@ import com.mrtecks.amrdukan.checkoutPOJO.checkoutBean;
 import com.mrtecks.amrdukan.foodCatPOJO.foodCatBean;
 import com.mrtecks.amrdukan.foodProductsPOJO.foodProductBean;
 import com.mrtecks.amrdukan.homePOJO.homeBean;
+import com.mrtecks.amrdukan.loginPOJO.loginBean;
 import com.mrtecks.amrdukan.orderDetailsPOJO.orderDetailsBean;
 import com.mrtecks.amrdukan.ordersPOJO.ordersBean;
 import com.mrtecks.amrdukan.productsPOJO.productsBean;
@@ -64,8 +65,17 @@ public interface AllApiIneterface {
     Call<loginBean> login(
             @Part("email") String email,
             @Part("password") String password,
-            @Part("name") String name,
             @Part("token") String token
+    );
+
+    @Multipart
+    @POST("amrdukan/api/register.php")
+    Call<loginBean> register(
+            @Part("email") String email,
+            @Part("password") String password,
+            @Part("name") String name,
+            @Part("token") String token,
+            @Part("phone") String phone
     );
 
     @Multipart

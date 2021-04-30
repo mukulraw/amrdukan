@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.mrtecks.amrdukan.productsPOJO.Datum;
 import com.mrtecks.amrdukan.productsPOJO.productsBean;
@@ -53,7 +54,7 @@ public class product extends Fragment {
 
     RecyclerView grid;
     CategoryAdapter adapter;
-    GridLayoutManager manager;
+    StaggeredGridLayoutManager manager;
     String cid;
     String subid;
     ProgressBar progress;
@@ -73,7 +74,7 @@ public class product extends Fragment {
         progress = view.findViewById(R.id.progressBar7);
 
         adapter = new CategoryAdapter(getActivity(), list);
-        manager = new GridLayoutManager(getActivity(), 2);
+        manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
 
         grid.setAdapter(adapter);
         grid.setLayoutManager(manager);

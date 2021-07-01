@@ -305,6 +305,13 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("amrdukan/api/cancelOrder.php")
+    Call<checkoutBean> cancelOrder(
+            @Part("order_id") String order_id,
+            @Part("restaurant") String restaurant
+    );
+
+    @Multipart
     @POST("amrdukan/api/getAddress.php")
     Call<addressBean> getAddress(
             @Part("user_id") String user_id

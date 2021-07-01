@@ -18,6 +18,7 @@ import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -380,8 +381,7 @@ public class Checkout2 extends AppCompatActivity {
                 String p = pin.getText().toString();
                 String ph = phone.getText().toString();
 
-                if (ph.length() == 10)
-                {
+                if (ph.length() == 10) {
                     if (n.length() > 0) {
 
                         if (a.length() > 0) {
@@ -443,40 +443,63 @@ public class Checkout2 extends AppCompatActivity {
 
                                             progress.setVisibility(View.GONE);
 
-                                            final Dialog dialog = new Dialog(Checkout2.this, R.style.DialogCustomTheme);
+                                            final Dialog dialog = new Dialog(Checkout2.this, R.style.MyDialogTheme);
                                             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                            dialog.setCancelable(true);
-                                            dialog.setContentView(R.layout.success_popup);
+                                            dialog.setCancelable(false);
+                                            dialog.setContentView(R.layout.wait_popup);
                                             dialog.show();
 
-                                            TextView oi = dialog.findViewById(R.id.textView57);
-                                            TextView au = dialog.findViewById(R.id.textView58);
-                                            Button ok = dialog.findViewById(R.id.button10);
+                                            TextView oi = dialog.findViewById(R.id.textView89);
+                                            ProgressBar bar = dialog.findViewById(R.id.progressBar6);
 
-                                            oi.setText(oid);
-                                            au.setText("₹ " + gtotal);
-
-                                            ok.setOnClickListener(new View.OnClickListener() {
+                                            CountDownTimer timer = new CountDownTimer(120000, 1000) {
                                                 @Override
-                                                public void onClick(View v) {
-
-                                                    dialog.dismiss();
-                                                    Intent intent = new Intent(Checkout2.this, MainActivity.class);
-                                                    startActivity(intent);
-                                                    finishAffinity();
-
+                                                public void onTick(long millisUntilFinished) {
+                                                    oi.setText(convertSecondsToHMmSs(millisUntilFinished / 1000));
                                                 }
-                                            });
 
-                                            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                                 @Override
-                                                public void onCancel(DialogInterface dialog) {
+                                                public void onFinish() {
+                                                    bar.setVisibility(View.VISIBLE);
 
-                                                    dialog.dismiss();
-                                                    finish();
+                                                    Bean b = (Bean) getApplicationContext();
 
+                                                    //String adr = a + ", " + ar + ", " + c + ", " + p;
+                                                    String adr = a;
+
+                                                    Log.d("addd", adr);
+
+                                                    Retrofit retrofit = new Retrofit.Builder()
+                                                            .baseUrl(b.baseurl)
+                                                            .addConverterFactory(ScalarsConverterFactory.create())
+                                                            .addConverterFactory(GsonConverterFactory.create())
+                                                            .build();
+
+                                                    AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+
+                                                    Call<checkoutBean> call1 = cr.cancelOrder(
+                                                            response.body().getData().getId(),
+                                                            cid
+                                                    );
+
+                                                    call1.enqueue(new Callback<checkoutBean>() {
+                                                        @Override
+                                                        public void onResponse(Call<checkoutBean> call, Response<checkoutBean> response) {
+                                                            Toast.makeText(Checkout2.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                                            dialog.dismiss();
+                                                            bar.setVisibility(View.GONE);
+                                                            finish();
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<checkoutBean> call, Throwable t) {
+                                                            bar.setVisibility(View.GONE);
+                                                        }
+                                                    });
                                                 }
-                                            });
+                                            };
+
+                                            timer.start();
 
                                         }
 
@@ -574,17 +597,21 @@ public class Checkout2 extends AppCompatActivity {
                     } else {
                         Toast.makeText(Checkout2.this, "Please enter a valid Name", Toast.LENGTH_SHORT).show();
                     }
-                }
-                else
-                {
+                } else {
                     Toast.makeText(Checkout2.this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
                 }
-
 
 
             }
         });
 
+    }
+
+    public String convertSecondsToHMmSs(long seconds) {
+        long s = seconds % 60;
+        long m = (seconds / 60) % 60;
+        long h = (seconds / (60 * 60)) % 24;
+        return String.format("%02d:%02d", m, s);
     }
 
     protected void createLocationRequest() {

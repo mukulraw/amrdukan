@@ -55,14 +55,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         try {
             handleNotification(object.getString("message") , object.getString("image"));
+            Intent registrationComplete = new Intent("count");
+
+            LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
-        Intent registrationComplete = new Intent("count");
 
-        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
 
 
         super.onMessageReceived(remoteMessage);

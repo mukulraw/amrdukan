@@ -107,6 +107,7 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/green_back_round"
         android:gravity="center"
+        android:textSize="12sp"
         android:minWidth="0dp"
         android:paddingStart="20dp"
         android:paddingTop="8dp"

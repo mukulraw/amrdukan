@@ -5,13 +5,17 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -107,6 +111,9 @@ public class Checkout2 extends AppCompatActivity {
 
     LocationSettingsRequest.Builder builder;
     LocationRequest locationRequest;
+    CountDownTimer timer;
+    Dialog dialog;
+    LocalBroadcastManager bm;
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
@@ -146,6 +153,10 @@ public class Checkout2 extends AppCompatActivity {
         apply = findViewById(R.id.button9);
         getlocation = findViewById(R.id.textView84);
 
+        bm = LocalBroadcastManager.getInstance(this);
+        IntentFilter actionReceiver = new IntentFilter();
+        actionReceiver.addAction("count");
+        bm.registerReceiver(onJsonReceived , actionReceiver);
 
         setSupportActionBar(toolbar);
 
@@ -443,7 +454,7 @@ public class Checkout2 extends AppCompatActivity {
 
                                             progress.setVisibility(View.GONE);
 
-                                            final Dialog dialog = new Dialog(Checkout2.this, R.style.MyDialogTheme);
+                                            dialog = new Dialog(Checkout2.this, R.style.MyDialogTheme);
                                             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                             dialog.setCancelable(false);
                                             dialog.setContentView(R.layout.wait_popup);
@@ -452,7 +463,7 @@ public class Checkout2 extends AppCompatActivity {
                                             TextView oi = dialog.findViewById(R.id.textView89);
                                             ProgressBar bar = dialog.findViewById(R.id.progressBar6);
 
-                                            CountDownTimer timer = new CountDownTimer(120000, 1000) {
+                                            timer = new CountDownTimer(120000, 1000) {
                                                 @Override
                                                 public void onTick(long millisUntilFinished) {
                                                     oi.setText(convertSecondsToHMmSs(millisUntilFinished / 1000));
@@ -739,6 +750,30 @@ public class Checkout2 extends AppCompatActivity {
         }
 
 
+    }
+
+    private final BroadcastReceiver onJsonReceived = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                Log.d("cancel", "called");
+                try {
+                    timer.cancel();
+                    dialog.dismiss();
+                    finish();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        bm.unregisterReceiver(onJsonReceived);
     }
 
 }

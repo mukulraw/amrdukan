@@ -40,10 +40,10 @@
         android:layout_height="0dp"
         android:background="@drawable/primary_back_round"
         android:src="@drawable/ic_search_white"
-        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/textView5"
         app:layout_constraintEnd_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toTopOf="@+id/textView5" />
+        app:layout_constraintTop_toTopOf="@+id/textView5"
+        app:tint="@color/white" />
 
     <TextView
         android:id="@+id/textView7"

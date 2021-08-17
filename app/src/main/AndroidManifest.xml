@@ -18,12 +18,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Web"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".EditAddress"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".AddAddress"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".AddAddressActivity"></activity>
+        <activity android:name=".LocationPicker" />
+        <activity
+            android:name=".Web"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditAddress"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AddAddress"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Signup"
             android:screenOrientation="portrait" />

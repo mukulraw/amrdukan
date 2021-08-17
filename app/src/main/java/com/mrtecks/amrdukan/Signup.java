@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -27,7 +28,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class Signup extends AppCompatActivity {
 
-    ImageButton back;
+    ImageView back;
     TextInputEditText name, email, phone, password;
     Button signup;
     ProgressBar progress;
@@ -106,7 +107,7 @@ public class Signup extends AppCompatActivity {
                                             SharePreferenceUtils.getInstance().saveString("name", item.getName());
                                             Toast.makeText(Signup.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
-                                            Intent intent = new Intent(Signup.this, MainActivity.class);
+                                            Intent intent = new Intent(Signup.this, LocationPicker.class);
                                             startActivity(intent);
                                             finishAffinity();
 

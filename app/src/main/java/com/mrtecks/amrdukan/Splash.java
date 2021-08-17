@@ -130,7 +130,7 @@ public class Splash extends AppCompatActivity {
 
                 if (uid.length() > 0)
                 {
-                    Intent intent = new Intent(Splash.this , MainActivity.class);
+                    Intent intent = new Intent(Splash.this , LocationPicker.class);
                     startActivity(intent);
                     finish();
                 }

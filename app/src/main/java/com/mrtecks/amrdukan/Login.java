@@ -121,7 +121,7 @@ public class Login extends AppCompatActivity {
                                     SharePreferenceUtils.getInstance().saveString("name", item.getName());
                                     Toast.makeText(Login.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
-                                    Intent intent = new Intent(Login.this, MainActivity.class);
+                                    Intent intent = new Intent(Login.this, LocationPicker.class);
                                     startActivity(intent);
                                     finishAffinity();
 

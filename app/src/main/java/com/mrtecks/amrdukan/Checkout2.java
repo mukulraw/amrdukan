@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
@@ -39,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -50,10 +52,13 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.mrtecks.amrdukan.addressPOJO.Datum;
 import com.mrtecks.amrdukan.addressPOJO.addressBean;
 import com.mrtecks.amrdukan.checkPromoPOJO.checkPromoBean;
 import com.mrtecks.amrdukan.checkoutPOJO.checkoutBean;
+import com.shivtechs.maplocationpicker.MapUtility;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -99,9 +104,11 @@ public class Checkout2 extends AppCompatActivity {
 
     String actual_amount;
     String gst;
+    String packing;
     String membership_discount;
     String delivery1;
     String cid;
+    String auto_cancel;
 
     TextView promotext, getlocation;
 
@@ -116,6 +123,7 @@ public class Checkout2 extends AppCompatActivity {
     LocalBroadcastManager bm;
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private int AUTOCOMPLETE_REQUEST_CODE = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,9 +139,11 @@ public class Checkout2 extends AppCompatActivity {
         amm = getIntent().getStringExtra("amount");
         actual_amount = getIntent().getStringExtra("actual_amount");
         gst = getIntent().getStringExtra("gst");
+        packing = getIntent().getStringExtra("packing");
         membership_discount = getIntent().getStringExtra("membership_discount");
         delivery1 = getIntent().getStringExtra("delivery");
         cid = getIntent().getStringExtra("cid");
+        auto_cancel = getIntent().getStringExtra("auto_cancel");
 
         toolbar = findViewById(R.id.toolbar4);
         phone = findViewById(R.id.editTextPhone);
@@ -156,7 +166,7 @@ public class Checkout2 extends AppCompatActivity {
         bm = LocalBroadcastManager.getInstance(this);
         IntentFilter actionReceiver = new IntentFilter();
         actionReceiver.addAction("count");
-        bm.registerReceiver(onJsonReceived , actionReceiver);
+        bm.registerReceiver(onJsonReceived, actionReceiver);
 
         setSupportActionBar(toolbar);
 
@@ -196,7 +206,7 @@ public class Checkout2 extends AppCompatActivity {
 
 
         phone.setText(SharePreferenceUtils.getInstance().getString("phone"));
-        address.setText(SharePreferenceUtils.getInstance().getString("deliveryLocation"));
+        address.setText(SharePreferenceUtils.getInstance().getString("address"));
         area.setText(SharePreferenceUtils.getInstance().getString("getlocality"));
         city.setText(SharePreferenceUtils.getInstance().getString("getcity"));
         pin.setText(SharePreferenceUtils.getInstance().getString("getpincode"));
@@ -205,7 +215,10 @@ public class Checkout2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                createLocationRequest();
+                Intent intent = new Intent(Checkout2.this, LocationPickerActivity2.class);
+                //intent.putExtra(MapUtility.LATITUDE, sourceLAT);
+                //intent.putExtra(MapUtility.LONGITUDE, sourceLNG);
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
                 //address.setText(SharePreferenceUtils.getInstance().getString("deliveryLocation"));
 
             }
@@ -431,6 +444,8 @@ public class Checkout2 extends AppCompatActivity {
                                             SharePreferenceUtils.getInstance().getString("lat"),
                                             SharePreferenceUtils.getInstance().getString("lng"),
                                             gtotal,
+                                            gst,
+                                            packing,
                                             oid,
                                             ph,
                                             n,
@@ -450,67 +465,91 @@ public class Checkout2 extends AppCompatActivity {
                                         @Override
                                         public void onResponse(Call<checkoutBean> call, Response<checkoutBean> response) {
 
-                                            Toast.makeText(Checkout2.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            if (auto_cancel.equals("yes")) {
+                                                Toast.makeText(Checkout2.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
-                                            progress.setVisibility(View.GONE);
+                                                progress.setVisibility(View.GONE);
 
-                                            dialog = new Dialog(Checkout2.this, R.style.MyDialogTheme);
-                                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                            dialog.setCancelable(false);
-                                            dialog.setContentView(R.layout.wait_popup);
-                                            dialog.show();
+                                                dialog = new Dialog(Checkout2.this, R.style.MyDialogTheme);
+                                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                                dialog.setCancelable(false);
+                                                dialog.setContentView(R.layout.wait_popup);
+                                                dialog.show();
 
-                                            TextView oi = dialog.findViewById(R.id.textView89);
-                                            ProgressBar bar = dialog.findViewById(R.id.progressBar6);
+                                                TextView oi = dialog.findViewById(R.id.textView89);
+                                                ProgressBar bar = dialog.findViewById(R.id.progressBar6);
 
-                                            timer = new CountDownTimer(120000, 1000) {
-                                                @Override
-                                                public void onTick(long millisUntilFinished) {
-                                                    oi.setText(convertSecondsToHMmSs(millisUntilFinished / 1000));
-                                                }
+                                                timer = new CountDownTimer(120000, 1000) {
+                                                    @Override
+                                                    public void onTick(long millisUntilFinished) {
+                                                        oi.setText(convertSecondsToHMmSs(millisUntilFinished / 1000));
+                                                    }
 
-                                                @Override
-                                                public void onFinish() {
-                                                    bar.setVisibility(View.VISIBLE);
+                                                    @Override
+                                                    public void onFinish() {
+                                                        bar.setVisibility(View.VISIBLE);
 
-                                                    Bean b = (Bean) getApplicationContext();
+                                                        Bean b = (Bean) getApplicationContext();
 
-                                                    //String adr = a + ", " + ar + ", " + c + ", " + p;
-                                                    String adr = a;
+                                                        //String adr = a + ", " + ar + ", " + c + ", " + p;
+                                                        String adr = a;
 
-                                                    Log.d("addd", adr);
+                                                        Log.d("addd", adr);
 
-                                                    Retrofit retrofit = new Retrofit.Builder()
-                                                            .baseUrl(b.baseurl)
-                                                            .addConverterFactory(ScalarsConverterFactory.create())
-                                                            .addConverterFactory(GsonConverterFactory.create())
-                                                            .build();
+                                                        Retrofit retrofit = new Retrofit.Builder()
+                                                                .baseUrl(b.baseurl)
+                                                                .addConverterFactory(ScalarsConverterFactory.create())
+                                                                .addConverterFactory(GsonConverterFactory.create())
+                                                                .build();
 
-                                                    AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
+                                                        AllApiIneterface cr = retrofit.create(AllApiIneterface.class);
 
-                                                    Call<checkoutBean> call1 = cr.cancelOrder(
-                                                            response.body().getData().getId(),
-                                                            cid
-                                                    );
+                                                        Call<checkoutBean> call1 = cr.cancelOrder(
+                                                                response.body().getData().getId(),
+                                                                cid
+                                                        );
 
-                                                    call1.enqueue(new Callback<checkoutBean>() {
-                                                        @Override
-                                                        public void onResponse(Call<checkoutBean> call, Response<checkoutBean> response) {
-                                                            Toast.makeText(Checkout2.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                                                            dialog.dismiss();
-                                                            bar.setVisibility(View.GONE);
-                                                            finish();
-                                                        }
+                                                        call1.enqueue(new Callback<checkoutBean>() {
+                                                            @Override
+                                                            public void onResponse(Call<checkoutBean> call, Response<checkoutBean> response) {
+                                                                Toast.makeText(Checkout2.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                                                dialog.dismiss();
+                                                                bar.setVisibility(View.GONE);
+                                                                finish();
+                                                            }
 
-                                                        @Override
-                                                        public void onFailure(Call<checkoutBean> call, Throwable t) {
-                                                            bar.setVisibility(View.GONE);
-                                                        }
-                                                    });
-                                                }
-                                            };
+                                                            @Override
+                                                            public void onFailure(Call<checkoutBean> call, Throwable t) {
+                                                                bar.setVisibility(View.GONE);
+                                                            }
+                                                        });
+                                                    }
+                                                };
 
-                                            timer.start();
+                                                timer.start();
+                                            } else {
+                                                Toast.makeText(Checkout2.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                                                progress.setVisibility(View.GONE);
+
+                                                dialog = new Dialog(Checkout2.this, R.style.MyDialogTheme);
+                                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                                dialog.setCancelable(false);
+                                                dialog.setContentView(R.layout.wait_popup2);
+                                                dialog.show();
+
+                                                Button dismiss = dialog.findViewById(R.id.textView89);
+
+                                                dismiss.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        dialog.dismiss();
+                                                        finish();
+                                                    }
+                                                });
+
+                                            }
+
 
                                         }
 
@@ -733,6 +772,39 @@ public class Checkout2 extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                try {
+                    if (data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
+
+                        double sourceLAT = data.getDoubleExtra(MapUtility.LATITUDE, 0.0);
+                        double sourceLNG = data.getDoubleExtra(MapUtility.LONGITUDE, 0.0);
+
+                        String srcAddress = data.getStringExtra("addressasdasd");
+                        address.setText(srcAddress);
+
+                        SharePreferenceUtils.getInstance().saveString("lat", String.valueOf(sourceLAT));
+                        SharePreferenceUtils.getInstance().saveString("lng", String.valueOf(sourceLNG));
+                        SharePreferenceUtils.getInstance().saveString("address", srcAddress);
+
+                        Log.d("loc1", String.valueOf(sourceLAT));
+                        Log.d("loc1", String.valueOf(sourceLNG));
+
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Toast.makeText(Checkout2.this, status.toString(), Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+
         switch (requestCode) {
             // Check for the integer request code originally supplied to startResolutionForResult().
             case REQUEST_CHECK_SETTINGS:
@@ -761,8 +833,7 @@ public class Checkout2 extends AppCompatActivity {
                     timer.cancel();
                     dialog.dismiss();
                     finish();
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

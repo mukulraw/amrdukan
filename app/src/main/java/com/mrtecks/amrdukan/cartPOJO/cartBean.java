@@ -21,6 +21,15 @@ public class cartBean {
     @SerializedName("delcharges")
     @Expose
     private String delcharges;
+    @SerializedName("tax")
+    @Expose
+    private String tax;
+    @SerializedName("packing")
+    @Expose
+    private String packing;
+    @SerializedName("auto_cancel")
+    @Expose
+    private String auto_cancel;
     @SerializedName("data")
     @Expose
     private List<Datum> data = null;
@@ -71,5 +80,29 @@ public class cartBean {
 
     public void setDelcharges(String delcharges) {
         this.delcharges = delcharges;
+    }
+
+    public String getPacking() {
+        return packing;
+    }
+
+    public String getTax() {
+        return tax;
+    }
+
+    public void setPacking(String packing) {
+        this.packing = packing;
+    }
+
+    public void setTax(String tax) {
+        this.tax = tax;
+    }
+
+    public String getAuto_cancel() {
+        return auto_cancel;
+    }
+
+    public void setAuto_cancel(String auto_cancel) {
+        this.auto_cancel = auto_cancel;
     }
 }

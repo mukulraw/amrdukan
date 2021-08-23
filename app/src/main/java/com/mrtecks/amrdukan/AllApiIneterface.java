@@ -288,6 +288,8 @@ public interface AllApiIneterface {
             @Part("latitude") String latitude,
             @Part("longitude") String longitude,
             @Part("amount") String amount,
+            @Part("tax") String tax,
+            @Part("packing") String packing,
             @Part("txn") String txn,
             @Part("phone") String phone,
             @Part("name") String name,

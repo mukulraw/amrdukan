@@ -58,13 +58,14 @@ public class Cart2 extends AppCompatActivity {
     String client, txn;
 
     Toolbar toolbar;
-    TextView amount, gst, delivery, grand;
+    TextView amount, gst, delivery, grand, packing;
     float del = 25;
     float gs = 0;
     float mem = 0;
     float gt = 0;
+    float pack = 0;
 
-    String cid;
+    String cid, auto_cancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class Cart2 extends AppCompatActivity {
         amount = findViewById(R.id.textView70);
         gst = findViewById(R.id.textView76);
         delivery = findViewById(R.id.textView71);
+        packing = findViewById(R.id.textView78);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -160,9 +162,11 @@ public class Cart2 extends AppCompatActivity {
                     intent.putExtra("amount", String.valueOf(gt));
                     intent.putExtra("actual_amount", String.valueOf(amm));
                     intent.putExtra("gst", String.valueOf(gs));
+                    intent.putExtra("packing", String.valueOf(pack));
                     intent.putExtra("membership_discount", String.valueOf(mem));
                     intent.putExtra("delivery", String.valueOf(del));
                     intent.putExtra("cid", cid);
+                    intent.putExtra("auto_cancel", auto_cancel);
                     startActivity(intent);
                 } else {
                     Toast.makeText(Cart2.this, "Minimum order value is ₹ 65", Toast.LENGTH_SHORT).show();
@@ -218,13 +222,18 @@ public class Cart2 extends AppCompatActivity {
                     amm = Float.parseFloat(response.body().getTotal());
 
                     del = Float.parseFloat(response.body().getDelcharges());
+                    pack = Float.parseFloat(response.body().getPacking());
+                    float tax = Float.parseFloat(response.body().getTax());
 
-                    gs = 0;
+                    auto_cancel = response.body().getAuto_cancel();
+
+                    gs = (tax / 100) * amm;
 
                     delivery.setText("₹ " + del);
                     gst.setText("₹ " + gs);
+                    packing.setText("₹ " + pack);
 
-                    gt = amm + gs - mem + del;
+                    gt = amm + gs - mem + del + pack;
                     grand.setText("₹ " + gt);
 
                     btotal.setText("Total: \u20B9 " + gt);

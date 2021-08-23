@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -45,10 +46,13 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.mrtecks.amrdukan.addressPOJO.Datum;
 import com.mrtecks.amrdukan.addressPOJO.addressBean;
 import com.mrtecks.amrdukan.checkPromoPOJO.checkPromoBean;
 import com.mrtecks.amrdukan.checkoutPOJO.checkoutBean;
+import com.shivtechs.maplocationpicker.MapUtility;
 
 import org.json.JSONObject;
 
@@ -112,6 +116,7 @@ public class Checkout extends AppCompatActivity implements DatePickerDialog.OnDa
     LocationRequest locationRequest;
 
     protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private int AUTOCOMPLETE_REQUEST_CODE = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,13 +194,16 @@ public class Checkout extends AppCompatActivity implements DatePickerDialog.OnDa
         gtotal = String.valueOf(gt);
 
         phone.setText(SharePreferenceUtils.getInstance().getString("phone"));
-        address.setText(SharePreferenceUtils.getInstance().getString("deliveryLocation"));
+        address.setText(SharePreferenceUtils.getInstance().getString("address"));
 
         getlocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                createLocationRequest();
+                Intent intent = new Intent(Checkout.this, LocationPickerActivity2.class);
+                //intent.putExtra(MapUtility.LATITUDE, sourceLAT);
+                //intent.putExtra(MapUtility.LONGITUDE, sourceLNG);
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
                 //address.setText(SharePreferenceUtils.getInstance().getString("deliveryLocation"));
 
             }
@@ -929,6 +937,39 @@ public class Checkout extends AppCompatActivity implements DatePickerDialog.OnDa
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                try {
+                    if (data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
+
+                        double sourceLAT = data.getDoubleExtra(MapUtility.LATITUDE, 0.0);
+                        double sourceLNG = data.getDoubleExtra(MapUtility.LONGITUDE, 0.0);
+
+                        String srcAddress = data.getStringExtra("addressasdasd");
+                        address.setText(srcAddress);
+
+                        SharePreferenceUtils.getInstance().saveString("lat", String.valueOf(sourceLAT));
+                        SharePreferenceUtils.getInstance().saveString("lng", String.valueOf(sourceLNG));
+                        SharePreferenceUtils.getInstance().saveString("address", srcAddress);
+
+                        Log.d("loc1", String.valueOf(sourceLAT));
+                        Log.d("loc1", String.valueOf(sourceLNG));
+
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Toast.makeText(Checkout.this, status.toString(), Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
 
         switch (requestCode) {
             // Check for the integer request code originally supplied to startResolutionForResult().

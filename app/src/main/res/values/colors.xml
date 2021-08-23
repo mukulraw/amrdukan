@@ -12,4 +12,6 @@
     <color name="transparent">#00000000</color>
     <color name="dark_gray">#626262</color>
     <color name="yellow">#f3e617</color>
+    <color name="quantum_googgreen500">#0f9d58</color>
+    <color name="quantum_grey600">#757575</color>
 </resources>

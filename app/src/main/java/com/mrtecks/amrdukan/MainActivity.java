@@ -1,5 +1,6 @@
 package com.mrtecks.amrdukan;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,9 +21,14 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.hsalf.smileyrating.SmileyRating;
 import com.mrtecks.amrdukan.checkoutPOJO.checkoutBean;
+import com.shivtechs.maplocationpicker.MapUtility;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -34,6 +40,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
+import static io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesProvider.REQUEST_CHECK_SETTINGS;
+
 public class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
@@ -41,10 +49,11 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navigation;
 
     ImageView cart;
-    TextView count;
+    TextView count, location;
 
     TextView address, orders, cart1, contact, about, share, terms, logout, name;
 
+    private int AUTOCOMPLETE_REQUEST_CODE = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         cart = findViewById(R.id.imageView2);
         navigation = findViewById(R.id.bottomNavigationView);
+        location = findViewById(R.id.textView2);
         count = findViewById(R.id.textView3);
         address = findViewById(R.id.textView19);
         orders = findViewById(R.id.textView20);
@@ -268,6 +278,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, LocationPickerActivity2.class);
+                //intent.putExtra(MapUtility.LATITUDE, sourceLAT);
+                //intent.putExtra(MapUtility.LONGITUDE, sourceLNG);
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+                drawer.closeDrawer(GravityCompat.START);
+
+                /*Intent intent = new Intent(MainActivity.this, AddAddressActivity.class);
+                startActivity(intent);
+                drawer.closeDrawer(GravityCompat.START);*/
+            }
+        });
+
 
         navigation.setSelectedItemId(R.id.action_home);
 
@@ -276,6 +302,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        location.setText(SharePreferenceUtils.getInstance().getString("address"));
 
         Bean b = (Bean) getApplicationContext();
 
@@ -359,4 +387,57 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                try {
+                    if (data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
+
+                        double sourceLAT = data.getDoubleExtra(MapUtility.LATITUDE, 0.0);
+                        double sourceLNG = data.getDoubleExtra(MapUtility.LONGITUDE, 0.0);
+
+                        String srcAddress = data.getStringExtra("addressasdasd");
+                        location.setText(srcAddress);
+
+                        SharePreferenceUtils.getInstance().saveString("lat", String.valueOf(sourceLAT));
+                        SharePreferenceUtils.getInstance().saveString("lng", String.valueOf(sourceLNG));
+                        SharePreferenceUtils.getInstance().saveString("address", srcAddress);
+
+                        Log.d("loc1", String.valueOf(sourceLAT));
+                        Log.d("loc1", String.valueOf(sourceLNG));
+
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Toast.makeText(MainActivity.this, status.toString(), Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    Log.i("TAG", "User agreed to make required location settings changes.");
+                    //getLocation2();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    Toast.makeText(MainActivity.this, "Location is required for this app", Toast.LENGTH_LONG).show();
+                    finishAffinity();
+                    break;
+            }
+        }
+
+    }
+
 }

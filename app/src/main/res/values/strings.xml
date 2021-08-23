@@ -5,4 +5,5 @@
     <string name="google_maps_key">AIzaSyDg928l41AL20avLOGqYVVHHYHyNTM3DMY</string>
     <string name="default_notification_channel_id">123</string>
     <string name="alarm_notification">alarm_notification</string>
+    <string name="addressline1_hint">Enter Flat No / Floor / Landmark</string>
 </resources>

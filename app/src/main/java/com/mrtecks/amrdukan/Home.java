@@ -181,7 +181,7 @@ public class Home extends Fragment {
             }
         });
 
-        createLocationRequest();
+        //createLocationRequest();
 
         return view;
     }

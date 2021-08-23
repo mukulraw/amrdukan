@@ -33,6 +33,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="60dp"
+            android:drawableEnd="@drawable/ic_edit"
+            android:drawablePadding="8dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxWidth="250dp"
+            android:maxLines="1"
+            android:text="Getting location..."
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+            app:layout_constraintEnd_toEndOf="@+id/toolbar"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/toolbar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
         <ImageView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -41,6 +64,7 @@
             android:layout_marginBottom="10dp"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
+            android:visibility="gone"
             android:background="@drawable/white_back_stroke"
             android:src="@drawable/logo"
             app:layout_constraintBottom_toBottomOf="@+id/toolbar"

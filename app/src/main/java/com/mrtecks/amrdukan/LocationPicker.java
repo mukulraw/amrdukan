@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,15 +22,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.material.button.MaterialButton;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.shivtechs.maplocationpicker.MapUtility;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import static io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesProvider.REQUEST_CHECK_SETTINGS;
 
 public class LocationPicker extends AppCompatActivity {
 
@@ -44,6 +52,7 @@ public class LocationPicker extends AppCompatActivity {
     TextView tv_address;
 
     MaterialButton change, confirm;
+    private int AUTOCOMPLETE_REQUEST_CODE = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +68,17 @@ public class LocationPicker extends AppCompatActivity {
         change.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LocationPicker.this, AddAddressActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(LocationPicker.this, LocationPickerActivity2.class);
+                //intent.putExtra(MapUtility.LATITUDE, sourceLAT);
+                //intent.putExtra(MapUtility.LONGITUDE, sourceLNG);
+                startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+            }
+        });
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goHome();
             }
         });
 
@@ -100,7 +118,7 @@ public class LocationPicker extends AppCompatActivity {
         if (lat.length() > 0) {
             if (SharePreferenceUtils.getInstance().getString("address").length() > 0) {
                 tv_address.setText(SharePreferenceUtils.getInstance().getString("address"));
-                goHome();
+                //goHome();
 
             } else {
                 getMyAddress();
@@ -169,7 +187,7 @@ public class LocationPicker extends AppCompatActivity {
                 SharePreferenceUtils.getInstance().saveString("city", city);
 
                 tv_address.setText(address);
-                goHome();
+                //goHome();
                 Log.d("all_address" , String.valueOf(addresses.get(0)));
             }
 
@@ -179,15 +197,20 @@ public class LocationPicker extends AppCompatActivity {
     }
 
     private void goHome() {
-        new Handler(Looper.getMainLooper())
+
+        Intent intent = new Intent(context, MainActivity.class);
+        startActivity(intent);
+        finishAffinity();
+
+        /*new Handler(Looper.getMainLooper())
                 .postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         Intent intent = new Intent(context, MainActivity.class);
-                        //startActivity(intent);
-                        //finishAffinity();
+                        startActivity(intent);
+                        finishAffinity();
                     }
-                }, 1200);
+                }, 1200);*/
 
     }
 
@@ -208,6 +231,58 @@ public class LocationPicker extends AppCompatActivity {
                 });
         final AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                try {
+                    if (data != null && data.getStringExtra(MapUtility.ADDRESS) != null) {
+
+                        double sourceLAT = data.getDoubleExtra(MapUtility.LATITUDE, 0.0);
+                        double sourceLNG = data.getDoubleExtra(MapUtility.LONGITUDE, 0.0);
+
+                        String srcAddress = data.getStringExtra("addressasdasd");
+                        tv_address.setText(srcAddress);
+
+                        SharePreferenceUtils.getInstance().saveString("lat", String.valueOf(sourceLAT));
+                        SharePreferenceUtils.getInstance().saveString("lng", String.valueOf(sourceLNG));
+                        SharePreferenceUtils.getInstance().saveString("address", srcAddress);
+
+                        Log.d("loc1", String.valueOf(sourceLAT));
+                        Log.d("loc1", String.valueOf(sourceLNG));
+
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Toast.makeText(LocationPicker.this, status.toString(), Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    Log.i("TAG", "User agreed to make required location settings changes.");
+                    //getLocation2();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    Toast.makeText(LocationPicker.this, "Location is required for this app", Toast.LENGTH_LONG).show();
+                    finishAffinity();
+                    break;
+            }
+        }
+
     }
 
 }

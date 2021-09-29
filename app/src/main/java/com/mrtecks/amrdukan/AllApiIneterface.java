@@ -307,6 +307,12 @@ public interface AllApiIneterface {
     );
 
     @Multipart
+    @POST("amrdukan/api/checkShipping.php")
+    Call<checkoutBean> checkShipping(
+            @Part("pincode") String pincode
+    );
+
+    @Multipart
     @POST("amrdukan/api/cancelOrder.php")
     Call<checkoutBean> cancelOrder(
             @Part("order_id") String order_id,

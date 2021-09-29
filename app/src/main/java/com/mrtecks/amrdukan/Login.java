@@ -142,7 +142,7 @@ public class Login extends AppCompatActivity {
                     }
 
                 } else {
-                    Toast.makeText(Login.this, "Invalid phone", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "Invalid email", Toast.LENGTH_SHORT).show();
                 }
 
             }

@@ -280,7 +280,6 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:text="PIN Code *"
-                android:visibility="gone"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editText6" />
@@ -293,8 +292,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/white_back_round2"
-                android:visibility="gone"
-                android:ems="10"
+                android:ems="6"
                 android:hint="tap to enter"
                 android:inputType="number"
                 android:padding="10dp"

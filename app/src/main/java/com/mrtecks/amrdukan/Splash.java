@@ -117,8 +117,7 @@ public class Splash extends AppCompatActivity {
     }
 
 
-    void startApp()
-    {
+    void startApp() {
 
         t = new Timer();
 
@@ -128,25 +127,29 @@ public class Splash extends AppCompatActivity {
 
                 final String uid = SharePreferenceUtils.getInstance().getString("userId");
 
-                if (uid.length() > 0)
-                {
-                    Intent intent = new Intent(Splash.this , LocationPicker.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else
-                {
-                    Intent intent = new Intent(Splash.this , Login.class);
-                    startActivity(intent);
-                    finish();
-                }
+                if (uid.length() > 0) {
+                    final String lat = SharePreferenceUtils.getInstance().getString("lat");
 
+                    if (lat.length() > 0) {
+                        Intent intent = new Intent(Splash.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(Splash.this, LocationPicker.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
+
+                } else {
+                    Intent intent = new Intent(Splash.this, Login.class);
+                    startActivity(intent);
+                    finish();
+                }
 
 
             }
-        } , 1200);
-
-
+        }, 1200);
 
 
     }
